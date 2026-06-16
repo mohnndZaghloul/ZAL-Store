@@ -1,0 +1,195 @@
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String         @id @default(uuid())
+  role            UserRole       @default(USER)
+  name            String
+  email           String         @unique
+  phone           String?
+  password        String?
+  image           String?
+  emailVerified   Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  createdProducts Product[]      @relation("createdBy")
+  favorites       UserFavorite[]
+  cartItems       CartItem[]
+  orders          Order[]
+  accounts        Account[]
+  sessions        Session[]
+
+  @@index([email])
+  @@map("user")
+}
+
+model Product {
+  id          String           @id @default(uuid())
+  title       String
+  description String
+  price       Float
+  images      String[]
+  tags        String[]         @default([])
+  createAt    DateTime         @default(now())
+  UpdateAt    DateTime         @updatedAt
+  createdById String?
+  createdBy   User?            @relation("createdBy", fields: [createdById], references: [id])
+  categories  Category[]       @relation("CategoryToProduct")
+  favoritedBy UserFavorite[]
+  cartItems   CartItem[]
+  variants    ProductVariant[]
+
+  @@index([createdById])
+  @@index([price])
+  @@map("product")
+}
+
+model ProductVariant {
+  id            String      @id @default(uuid())
+  size          size
+  color         String
+  stock         Int         @default(0)
+  priceModifier Float       @default(0)
+  productId     String
+  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cartItems     CartItem[]
+  orderitems    OrderItem[]
+
+  @@unique([productId, size, color]) // no duplicate combos
+  @@index([productId])
+  @@map("product_variant")
+}
+
+model Order {
+  id                  String      @id @default(uuid())
+  userId              String
+  user                User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount              Int
+  currency            String      @default("EGP")
+  status              String      @default("PENDING")
+  paymobOrderId       String?     @unique
+  paymobTransactionId String?     @unique
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  items               OrderItem[]
+
+  @@index([userId])
+  @@index([status])
+  @@map("order")
+}
+
+model OrderItem {
+  id              String         @id @default(uuid())
+  orderId         String
+  variantId       String
+  quantity        Int
+  priceAtPurchase Float // snapshot price — never changes even if product price updates
+  order           Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variant         ProductVariant @relation(fields: [variantId], references: [id])
+
+  @@map("order_item")
+}
+
+model UserFavorite {
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([userId, productId])
+  @@map("user_favorite")
+}
+
+model CartItem {
+  id        String         @id @default(uuid())
+  quantity  Int            @default(1)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  userId    String
+  variantId String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  product   Product?       @relation(fields: [productId], references: [id])
+  productId String?
+
+  @@unique([userId, variantId])
+  @@map("cart_item")
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  products Product[] @relation("CategoryToProduct")
+
+  @@map("category")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum size {
+  S
+  M
+  L
+  XL
+  XXL
+}
