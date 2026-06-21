@@ -5,16 +5,22 @@ export type Product_TP = {
   title: string;
   description: string;
   price: number;
-  size: string;
-  color: string;
   images: string[];
-  tags: string[];
   createAt: Date;
+  variants?: stock_TP[];
+  tags?: string[];
   actions?: string;
   categories?: {
     id: string;
     name: string;
   }[];
+};
+
+export type stock_TP = {
+  id?: string;
+  size: "S" | "M" | "L" | "XL" | "XXL";
+  color: string;
+  stock: number;
 };
 
 export type Category_TP = { id: string; name: string };
@@ -114,9 +120,15 @@ export type FormInput_TP = {
 
 export type ProductFormErrors = {
   title?: string[];
-  price?: string[];
   description?: string[];
-  tags?: string[];
+  price?: string[];
+  variants?: string[];
+  categories?: string[];
   images?: string[];
   general?: string[];
+};
+
+export type ProductActionState = {
+  errors?: ProductFormErrors;
+  inputs?: Record<string, unknown>;
 };

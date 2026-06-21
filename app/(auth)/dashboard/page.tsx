@@ -1,7 +1,7 @@
 import { ChartAreaInteractive } from "@/components/dashboard/chart-area-interactive";
 import { SectionCards } from "@/components/dashboard/section-cards";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
   return (
     <main className="container">
       <div className="flex flex-1 flex-col">

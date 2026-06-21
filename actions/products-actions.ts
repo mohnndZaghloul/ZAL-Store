@@ -1,34 +1,38 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { ProductFormActionState_TP, ProductFormErrors } from "@/lib/types";
+import { ProductActionState, ProductFormErrors } from "@/types/index";
 import { ProductSchema } from "@/lib/validation";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "./customers-actions";
-import { Prisma } from "@/generated/prisma";
+import { Prisma } from "@/generated/prisma/client";
 
-export const productFormActions = async (
+export const AddProduct = async (
   meta: { mode: string; productId?: string },
-  prevState: ProductFormActionState_TP,
-  formData: FormData,
+  prevState: ProductActionState,
+  FormData: FormData,
 ) => {
-  const user = await getCurrentUser();
-  const rawData = {
-    title: (formData.get("title") as string) || "",
-    price: (formData.get("price") as string) || "",
-    description: (formData.get("description") as string) || "",
-    tags: (formData.get("tags") as string) || "",
-    images: JSON.parse((formData.get("images") as string) || "[]"),
+  const user = {
+    id: "KFNlEBmEjnneROwnbjNizGum6CUExkSs",
+    name: "Mohannd Zaghloul",
+    role: "ADMIN",
   };
-  const categoriesRaw = formData.get("categories") as string;
-  const categoryIds: string[] = JSON.parse(categoriesRaw || "[]");
+
+  const rawData = {
+    title: (FormData.get("title") as string) || "",
+    description: (FormData.get("description") as string) || "",
+    price: (FormData.get("price") as string) || "",
+    categories: (FormData.get("categories") as string) || "[]",
+    variants: (FormData.get("variants") as string) || "[]",
+    images: (FormData.get("images") as string) || "[]",
+  };
 
   const emptyErrors: ProductFormErrors = {
     title: [],
-    price: [],
     description: [],
-    tags: [],
+    price: [],
+    variants: [],
     images: [],
     general: [],
   };
@@ -44,6 +48,7 @@ export const productFormActions = async (
   }
 
   const validated = ProductSchema.safeParse(rawData);
+
   if (!validated.success) {
     return {
       errors: {
@@ -54,52 +59,67 @@ export const productFormActions = async (
     };
   }
 
-  const { title, price, description, tags, images } = validated.data;
+  const { title, price, description, variants, images, categories } =
+    validated.data;
+
   try {
     if (meta.mode === "add-product") {
       await prisma.product.create({
         data: {
           title,
-          price,
           description,
-          categories: {
-            connect: categoryIds.map((id) => ({ id })),
-          },
-          tags: tags.split(",").map((t) => t.trim()),
+          price,
           images,
           createdById: user?.id,
+          categories: {
+            connect: categories.map((id) => ({ id })),
+          },
+          variants: { createMany: { data: variants } },
         },
       });
     } else {
       if (meta.mode !== "add-product" && !meta.productId) {
         throw new Error("Product ID is required for update");
       }
-      await prisma.product.update({
-        where: { id: meta.productId },
-        data: {
-          title,
-          price,
-          description,
-          categories: {
-            connect: categoryIds.map((id) => ({ id })),
+      await prisma.$transaction([
+        prisma.productVariant.deleteMany({
+          where: { productId: meta.productId },
+        }),
+        prisma.product.update({
+          where: { id: meta.productId },
+          data: {
+            title,
+            description,
+            price,
+            images,
+            categories: { set: categories.map((id) => ({ id })) },
+            variants: { createMany: { data: variants } },
           },
-          tags: tags.split(",").map((t) => t.trim()),
-          images,
-          createdById: user?.id,
-        },
-      });
+        }),
+      ]);
     }
   } catch (error) {
+    console.error("AddProduct error:", error);
     return {
-      errors: { general: ["Something went wrong"] },
+      errors: { ...emptyErrors, general: [`${error}`] },
       inputs: rawData,
     };
   }
   redirect("/dashboard/products");
 };
+
 export const getAllProducts = async () => {
   return await prisma.product.findMany();
 };
+export const getAllStock = async () => {
+  return await prisma.product.findMany({
+    include: {
+      variants: true,
+      categories: true,
+    },
+  });
+};
+
 export const getProductsByFilter = async (
   categoryIds: string[],
   searchText: string,
@@ -172,7 +192,7 @@ export const getCurrentUserProducts = async () => {
 export const getProductById = async (id: string) => {
   return await prisma.product.findUnique({
     where: { id },
-    include: { categories: true },
+    include: { categories: true, variants: true },
   });
 };
 export const deleteProduct = async (id: string) => {

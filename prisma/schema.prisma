@@ -63,7 +63,7 @@ model ProductVariant {
   cartItems     CartItem[]
   orderitems    OrderItem[]
 
-  @@unique([productId, size, color]) // no duplicate combos
+  @@unique([productId, size, color])
   @@index([productId])
   @@map("product_variant")
 }

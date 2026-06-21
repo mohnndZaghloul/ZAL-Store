@@ -1,15 +1,10 @@
 "use client";
 
-import {
-  deleteCustomer,
-  resetPassword,
-  setRole,
-} from "@/actions/customers-actions";
+import { resetPassword, setRole } from "@/actions/customers-actions";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, SendIcon, Trash2, CircleCheckBig } from "lucide-react";
-import { signOut } from "@/lib/auth-client";
 import { useState } from "react";
 import { deleteProduct } from "@/actions/products-actions";
 import Image from "next/image";
@@ -17,7 +12,6 @@ import { Skeleton } from "../../ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import Link from "next/link";
 import { User_TP, Product_TP, Role_TP } from "@/types/index";
-// import DeleteButton from "./DeleteButton";
 import {
   Select,
   SelectContent,
@@ -26,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../ui/select";
+import DeleteButton from "@/components/forms/DeleteButton";
 
 export const CustomersColumns: ColumnDef<User_TP>[] = [
   {
@@ -203,7 +198,7 @@ export const ProductsColumns: ColumnDef<Product_TP>[] = [
     ),
     cell: ({ row }) =>
       row.original.images ? (
-        <div className="relative mx-auto w-20 h-20 rounded-xl overflow-hidden border">
+        <div className="relative mx-auto w-32 h-32 rounded-xl overflow-hidden border">
           <Image
             className="object-cover transition-transform duration-200 hover:scale-105"
             fill
@@ -231,11 +226,50 @@ export const ProductsColumns: ColumnDef<Product_TP>[] = [
   {
     accessorKey: "price",
     header: "Price",
-    cell: ({ row }) => <p>{row.original.price} EGP</p>,
+    cell: ({ row }) => (
+      <p className="text-primary font-semibold">{row.original.price} EGP</p>
+    ),
   },
   {
-    accessorKey: "rating",
-    header: "Rating",
+    accessorKey: "size",
+    header: "Size",
+    cell: ({ row }) => (
+      <>
+        {row.original.variants.map((stock) => (
+          <p key={stock.id} className="text-lg font-semibold">
+            {stock.size}
+          </p>
+        ))}
+      </>
+    ),
+  },
+  {
+    accessorKey: "color",
+    header: "Color",
+    cell: ({ row }) => (
+      <div className="space-y-2">
+        {row.original.variants.map((stock) => (
+          <div
+            key={stock.id}
+            style={{ background: stock.color }}
+            className="h-5 w-5 rounded-full"
+          />
+        ))}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "stock",
+    header: "Stock",
+    cell: ({ row }) => (
+      <>
+        {row.original.variants.map((stock) => (
+          <p key={stock.id} className="text-lg">
+            {stock.stock}
+          </p>
+        ))}
+      </>
+    ),
   },
   {
     accessorKey: "createAt",
@@ -259,7 +293,7 @@ export const ProductsColumns: ColumnDef<Product_TP>[] = [
             nativeButton={false}
             render={<Link href={`./products/${row.original.id}`}>edit</Link>}
           />
-          {/* <DeleteButton
+          <DeleteButton
             title="delete product"
             description="are you sure you want delete this product?"
             onClick={async () => {
@@ -267,7 +301,7 @@ export const ProductsColumns: ColumnDef<Product_TP>[] = [
             }}>
             <Trash2 />
             delete
-          </DeleteButton> */}
+          </DeleteButton>
         </div>
       );
     },

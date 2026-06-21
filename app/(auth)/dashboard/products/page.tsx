@@ -4,6 +4,7 @@ import { Box, CirclePlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
+import { getAllStock } from "@/actions/products-actions";
 
 export const metadata: Metadata = {
   title: "Owner products | Next Store",
@@ -12,6 +13,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ProductsPage() {
+  const data = await getAllStock();
+
   return (
     <main className="p-6">
       <div className="flex justify-between items-center">
@@ -20,7 +23,7 @@ export default async function ProductsPage() {
           your products
         </h1>
         <Button
-          className="capitalize"
+          className="capitalize shadow rounded-none hover:shadow-primary border-0"
           nativeButton={false}
           render={
             <Link href="./products/add-product">
@@ -30,7 +33,7 @@ export default async function ProductsPage() {
           }
         />
       </div>
-      <DataTable columns={ProductsColumns} data={[]} filter="title" />
+      <DataTable columns={ProductsColumns} data={data} filter="title" />
     </main>
   );
 }
