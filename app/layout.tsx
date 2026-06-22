@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda, Inter } from "next/font/google";
+import { Bodoni_Moda, Montserrat } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/header/theme-provider";
@@ -7,11 +7,16 @@ import NavBar from "@/components/header/NavBar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import SidebarCart from "@/components/cart/SidebarCart";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-montserrat",
+  weight: ["400", "500", "600", "700"],
+});
 
 const bodoniModa = Bodoni_Moda({
-  variable: "--font-display",
   subsets: ["latin"],
+  variable: "--font-bodoni-moda",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -31,7 +36,7 @@ export default function RootLayout({
       className={cn(
         "h-full",
         "antialiased",
-        inter.variable,
+        montserrat.variable,
         bodoniModa.variable,
         "font-sans",
       )}>

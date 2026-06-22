@@ -40,26 +40,20 @@ export default function NavBar() {
   }, [data?.user?.id, setCartCount, setFavCount]);
 
   return (
-    <header className="border-b border-primary/20 shadow-2xl shadow-primary/20">
-      <nav className="container h-full hidden sm:flex justify-between items-center">
+    <header className="fixed w-full z-50 bg-background border-b border-secondary/40 shadow-2xl shadow-secondary/40">
+      <nav className="container h-full min-h-12 hidden sm:flex justify-between items-center">
         <div>
-          <h1 className="text-primary text-2xl">ZAL</h1>
+          <h1 className="text-primary font-semibold text-2xl">ZAL</h1>
         </div>
-        <ul className="flex items-center gap-5 text-sm">
+        <ul className="flex items-center gap-10 text-sm">
           <li>
-            <NavLink href="/">
-              <span className="py-4">shop</span>
-            </NavLink>
+            <NavLink href="/">collections</NavLink>
           </li>
           <li>
-            <NavLink href="/collections">
-              <span className="py-4">collections</span>
-            </NavLink>
+            <NavLink href="/arrivals">new arrivals</NavLink>
           </li>
           <li>
-            <NavLink href="/contacts">
-              <span className="py-4">contact us</span>
-            </NavLink>
+            <NavLink href="/contact-us">contact us</NavLink>
           </li>
         </ul>
         <div className="flex items-center gap-4">

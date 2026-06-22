@@ -19,12 +19,12 @@ type SidebarLink = {
 };
 
 export const sidebarLinks: SidebarLink[] = [
-  {
-    label: "Profile",
-    url: "/dashboard/profile",
-    icon: <CircleUserRound />,
-    roles: ["ADMIN", "USER"],
-  },
+  // {
+  //   label: "Profile",
+  //   url: "/dashboard/profile",
+  //   icon: <CircleUserRound />,
+  //   roles: ["ADMIN", "USER"],
+  // },
   {
     label: "Dashboard",
     url: "/dashboard",
@@ -37,18 +37,18 @@ export const sidebarLinks: SidebarLink[] = [
     icon: <BoxIcon />,
     roles: ["ADMIN", "USER"],
   },
-  {
-    label: "My Orders",
-    url: "/dashboard/orders",
-    icon: <ListOrderedIcon />,
-    roles: ["ADMIN", "USER"],
-  },
-  {
-    label: "Customers",
-    url: routes.customers,
-    icon: <User2 />,
-    roles: ["ADMIN"],
-  },
+  // {
+  //   label: "My Orders",
+  //   url: "/dashboard/orders",
+  //   icon: <ListOrderedIcon />,
+  //   roles: ["ADMIN", "USER"],
+  // },
+  // {
+  //   label: "Customers",
+  //   url: routes.customers,
+  //   icon: <User2 />,
+  //   roles: ["ADMIN"],
+  // },
   {
     label: "System",
     url: routes.system,

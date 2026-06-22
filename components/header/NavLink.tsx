@@ -14,8 +14,11 @@ export default function NavLink({ href, className, children }: NavLink_TP) {
   return (
     <Link
       href={href}
-      className={`${className} capitalize w-full ${path.endsWith(href) ? "text-primary" : "hover:text-primary"} transition-colors flex gap-2`}>
+      className={`${className} relative group uppercase tracking-widest w-full block transition-colors`}>
       {children}
+      <span
+        className={`absolute bottom-0 left-0 h-px bg-primary group-hover:w-1/2 group-hover:translate-x-1/2 ${path.endsWith(href) ? "w-full" : "w-0"} transition-all duration-300`}
+      />
     </Link>
   );
 }

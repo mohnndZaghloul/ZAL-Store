@@ -235,7 +235,7 @@ export const ProductsColumns: ColumnDef<Product_TP>[] = [
     header: "Size",
     cell: ({ row }) => (
       <>
-        {row.original.variants.map((stock) => (
+        {row.original.variants?.map((stock) => (
           <p key={stock.id} className="text-lg font-semibold">
             {stock.size}
           </p>
@@ -248,7 +248,7 @@ export const ProductsColumns: ColumnDef<Product_TP>[] = [
     header: "Color",
     cell: ({ row }) => (
       <div className="space-y-2">
-        {row.original.variants.map((stock) => (
+        {row.original.variants?.map((stock) => (
           <div
             key={stock.id}
             style={{ background: stock.color }}
@@ -263,7 +263,7 @@ export const ProductsColumns: ColumnDef<Product_TP>[] = [
     header: "Stock",
     cell: ({ row }) => (
       <>
-        {row.original.variants.map((stock) => (
+        {row.original.variants?.map((stock) => (
           <p key={stock.id} className="text-lg">
             {stock.stock}
           </p>
