@@ -1,7 +1,13 @@
 "use client";
 import NavLink from "./NavLink";
 import { ModeToggler } from "./ModeToggler";
-import { Heart, ShoppingCart, UserCircle } from "lucide-react";
+import {
+  Heart,
+  ShoppingBag,
+  ShoppingCart,
+  User,
+  UserCircle,
+} from "lucide-react";
 import { Badge } from "../ui/badge";
 import { useCartStore } from "@/store/cart";
 import { useFavStore } from "@/store/favorite";
@@ -69,7 +75,7 @@ export default function NavBar() {
               </Avatar>
             ) : (
               <NavLink href="/login" className="hover:text-primary transition">
-                <UserCircle />
+                <User />
               </NavLink>
             )}
           </div>
@@ -78,7 +84,7 @@ export default function NavBar() {
               <Button
                 variant="ghost"
                 className="hover:text-primary! hover:bg-transparent!">
-                <ShoppingCart className="w-5! h-5!" />
+                <ShoppingBag className="w-5! h-5!" />
                 {CartCount > 0 ? (
                   <Badge className="absolute -top-2 -right-2 text-xs">
                     {CartCount}

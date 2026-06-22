@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const SamplesSection = () => {
   return (
-    <section className="container flex gap-6">
+    <section className="container flex flex-col md:flex-row gap-6 my-8">
       <div className="flex-5">
         <div className="group">
           <div className="relative aspect-3/4 overflow-hidden">

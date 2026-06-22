@@ -86,12 +86,12 @@
 
   --radius: 0.375rem;
 
-  --sidebar: var(--primary);
-  --sidebar-foreground: var(--tertiary);
+  --sidebar: var(--tertiary);
+  --sidebar-foreground: var(--primary);
   --sidebar-primary: var(--secondary);
-  --sidebar-primary-foreground: var(--primary);
+  --sidebar-primary-foreground: var(--tertiary);
   --sidebar-accent: var(--neutral);
-  --sidebar-accent-foreground: var(--tertiary);
+  --sidebar-accent-foreground: var(--primary);
   --sidebar-border: var(--neutral);
   --sidebar-ring: var(--secondary);
 }
