@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   keywords: ["system", "control", "dashboard"],
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function SystemPage() {
   const categories = await getAllCategories();
 

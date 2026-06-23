@@ -23,7 +23,7 @@ type stockList_TP = {
 const defaultStockValues: stock_TP = {
   size: "S",
   color: "#000000",
-  stock: "1",
+  stock: 1,
 };
 
 const StockList = ({ stockList, setStockList, error }: stockList_TP) => {
@@ -133,7 +133,7 @@ const StockList = ({ stockList, setStockList, error }: stockList_TP) => {
             placeholder="0"
             value={values.stock}
             onChange={(e) =>
-              setValues((prev) => ({ ...prev, stock: e.target.value }))
+              setValues((prev) => ({ ...prev, stock: Number(e.target.value) }))
             }
           />
         </div>

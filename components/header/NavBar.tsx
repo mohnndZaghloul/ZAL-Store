@@ -11,9 +11,9 @@ import {
 import { Badge } from "../ui/badge";
 import { useCartStore } from "@/store/cart";
 import { useFavStore } from "@/store/favorite";
-import { getCart } from "@/actions/cart-actions";
+// import { getCart } from "@/actions/cart-actions";
 import { useEffect } from "react";
-import { getFav } from "@/actions/favorite-actions";
+// import { getFav } from "@/actions/favorite-actions";
 import { useSession } from "@/lib/auth-client";
 import ResponsiveNav from "./ResponsiveNav";
 import { SidebarTrigger } from "../ui/sidebar";
@@ -36,10 +36,10 @@ export default function NavBar() {
     }
 
     const loadNav = async () => {
-      const [cart, fav] = await Promise.all([getCart(), getFav()]);
-      const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
-      setCartCount(totalQuantity);
-      setFavCount(fav.length);
+      // const [cart, fav] = await Promise.all([getCart(), getFav()]);
+      // const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
+      // setCartCount(totalQuantity);
+      // setFavCount(fav.length);
     };
 
     loadNav();

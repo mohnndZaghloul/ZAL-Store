@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 import { getAllStock } from "@/actions/products-actions";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Owner products | Next Store",
   description: "page contain products in user store which created by him",
