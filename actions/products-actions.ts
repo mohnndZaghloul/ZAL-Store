@@ -6,7 +6,7 @@ import { ProductSchema } from "@/lib/validation";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "./customers-actions";
-import { Prisma } from "../generated/prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 
 export const AddProduct = async (
   meta: { mode: string; productId?: string },

@@ -1,4 +1,4 @@
-import { UserRole } from "../generated/prisma/enums";
+import { UserRole } from "@/generated/prisma/enums";
 
 export type Product_TP = {
   id: string;
