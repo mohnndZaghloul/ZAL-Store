@@ -93,7 +93,7 @@ export default function NavBar() {
               </Button>
             }
           />
-          <ModeToggler />
+          {/* <ModeToggler /> */}
         </div>
       </nav>
       {/* <ResponsiveNav /> */}
