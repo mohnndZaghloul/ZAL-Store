@@ -46,7 +46,7 @@ export default function NavBar() {
   }, [data?.user?.id, setCartCount, setFavCount]);
 
   return (
-    <header className="fixed w-full z-50 bg-background border-b border-secondary/40 shadow-2xl shadow-secondary/40">
+    <header className="sticky top-0 z-50 bg-background border-b border-secondary/40 shadow-2xl shadow-secondary/40">
       <nav className="container h-full min-h-12 hidden sm:flex justify-between items-center">
         <div>
           <h1 className="text-primary font-semibold text-2xl">ZAL</h1>

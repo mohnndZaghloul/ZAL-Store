@@ -1,6 +1,18 @@
 import z from "zod";
 
-const productSizes = ["S", "M", "L", "XL", "XXL"] as const;
+const productSizes = [
+  "S",
+  "M",
+  "L",
+  "XL",
+  "XXL",
+  "40",
+  "42",
+  "44",
+  "46",
+  "48",
+  "50",
+] as const;
 
 export const ProductVariantSchema = z.object({
   size: z.enum(productSizes, { error: "Invalid size" }),

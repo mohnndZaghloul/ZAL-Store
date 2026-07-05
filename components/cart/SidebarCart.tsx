@@ -17,7 +17,7 @@ export default function SidebarCart() {
   const { setOpen } = useSidebar();
 
   return (
-    <Sidebar side="right" className="mt-10">
+    <Sidebar side="right">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="flex justify-between items-center border-b p-4">

@@ -6,6 +6,8 @@ import { ThemeProvider } from "@/components/header/theme-provider";
 import NavBar from "@/components/header/NavBar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import SidebarCart from "@/components/cart/SidebarCart";
+import JoinCircleSection from "@/components/shop/JoinCircleSection";
+import Footer from "@/components/footer/Footer";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -57,6 +59,8 @@ export default function RootLayout({
             <SidebarInset>
               <NavBar />
               {children}
+              <JoinCircleSection />
+              <Footer />
             </SidebarInset>
             <SidebarCart />
           </SidebarProvider>

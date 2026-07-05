@@ -7,9 +7,14 @@ import {
 } from "@/components/ui/carousel";
 import CustomCarousel from "./CustomCarousel";
 import Image from "next/image";
-import img from "@/public/images/gon&kelua.jpg";
+import { Product_TP } from "@/types";
+import Link from "next/link";
 
-export default function ProductsSlider() {
+export default function ProductsSlider({
+  products,
+}: {
+  products: Product_TP[];
+}) {
   return (
     <section className="py-8 bg-neutral/10">
       <Carousel
@@ -36,21 +41,36 @@ export default function ProductsSlider() {
           </div>
         </div>
         <CarouselContent className="py-4">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <CarouselItem key={index} className="basis-1/2 lg:basis-1/5">
-              <div>
+          {products.map((product) => (
+            <CarouselItem
+              key={product?.id}
+              className="basis-1/2 lg:basis-1/5 cursor-pointer group">
+              <Link href={`./${product.id}`}>
                 <div className="relative overflow-hidden group aspect-3/4 p-1">
-                  <Image src={img} alt="test" fill />
+                  <Image
+                    src={product?.images[0]}
+                    alt={product?.title}
+                    fill
+                    className=""
+                  />
+                  <Image
+                    src={product?.images[1]}
+                    alt={product?.title}
+                    fill
+                    className="opacity-0 group-hover:opacity-100 transition duration-300"
+                  />
                   <button className="absolute bottom-0 left-0 translate-y-full group-hover:translate-y-0 w-full py-4 bg-primary text-primary-foreground uppercase text-xs tracking-widest cursor-pointer transition duration-300">
                     add to cart
                   </button>
                 </div>
                 {/* <CustomCarousel /> */}
                 <div className="text-center my-2">
-                  <h3 className="text-xl uppercase">title</h3>
-                  <span className="font-light">EGP 650.00</span>
+                  <p className="text-sm uppercase">{product?.title}</p>
+                  <span className="font-semibold">
+                    EGP {product?.price.toFixed(2)}
+                  </span>
                 </div>
-              </div>
+              </Link>
             </CarouselItem>
           ))}
         </CarouselContent>

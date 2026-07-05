@@ -15,7 +15,7 @@ import { sidebarLinks } from "./SidebarData";
 
 export function DashboardSidebar() {
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="z-50">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

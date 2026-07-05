@@ -18,7 +18,7 @@ export type Product_TP = {
 
 export type stock_TP = {
   id?: string;
-  size: "S" | "M" | "L" | "XL" | "XXL";
+  size: string;
   color: string;
   stock: number;
 };

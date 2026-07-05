@@ -111,6 +111,12 @@ const StockList = ({ stockList, setStockList, error }: stockList_TP) => {
                 <SelectItem value="L">L</SelectItem>
                 <SelectItem value="XL">XL</SelectItem>
                 <SelectItem value="XXL">XXL</SelectItem>
+                <SelectItem value="40">40</SelectItem>
+                <SelectItem value="42">42</SelectItem>
+                <SelectItem value="44">44</SelectItem>
+                <SelectItem value="46">46</SelectItem>
+                <SelectItem value="48">48</SelectItem>
+                <SelectItem value="50">50</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
