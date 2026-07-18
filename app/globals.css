@@ -7,7 +7,6 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-display);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -189,19 +188,19 @@
   @media (min-width: 1024px) {
     .container {
       max-width: 1024px;
-      padding-inline: 2rem;
+      padding-inline: 1.75rem;
     }
   }
   @media (min-width: 1280px) {
     .container {
       max-width: 1280px;
-      padding-inline: 2rem;
+      padding-inline: 1.75rem;
     }
   }
   @media (min-width: 1536px) {
     .container {
-      max-width: 1400px;
-      padding-inline: 2rem;
+      max-width: 1600px;
+      padding-inline: 1.75rem;
     }
   }
 }

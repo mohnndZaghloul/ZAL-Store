@@ -8,7 +8,7 @@ import {
   User,
   UserCircle,
 } from "lucide-react";
-import { Badge } from "../ui/badge";
+import { Badge } from "../../ui/badge";
 import { useCartStore } from "@/store/cart";
 import { useFavStore } from "@/store/favorite";
 // import { getCart } from "@/actions/cart-actions";
@@ -16,9 +16,9 @@ import { useEffect } from "react";
 // import { getFav } from "@/actions/favorite-actions";
 import { useSession } from "@/lib/auth-client";
 import ResponsiveNav from "./ResponsiveNav";
-import { SidebarTrigger } from "../ui/sidebar";
-import { Button } from "../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { SidebarTrigger } from "../../ui/sidebar";
+import { Button } from "../../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 
 export default function NavBar() {
   const session: any = useSession;
@@ -53,10 +53,10 @@ export default function NavBar() {
         </div>
         <ul className="flex items-center gap-10 text-sm">
           <li>
-            <NavLink href="/">collections</NavLink>
+            <NavLink href="/">home</NavLink>
           </li>
           <li>
-            <NavLink href="/arrivals">new arrivals</NavLink>
+            <NavLink href="/collections">collections</NavLink>
           </li>
           <li>
             <NavLink href="/contact-us">contact us</NavLink>

@@ -16,11 +16,53 @@ export type Product_TP = {
   }[];
 };
 
+export type FilterData_TP = {
+  products: Product_TP[];
+  total: number;
+  totalPages: number;
+};
+
 export type stock_TP = {
   id?: string;
   size: string;
   color: string;
   stock: number;
+};
+
+export type FormInput_TP = {
+  name?: string;
+  label?: string;
+  placeholder?: string;
+  value?: string | string[];
+  className?: string;
+  minlength?: number;
+  maxlength?: number;
+  step?: string;
+  type?: string;
+  error?: string;
+  onChange: (
+    e:
+      | React.ChangeEvent<HTMLInputElement, HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement, HTMLTextAreaElement>,
+  ) => void;
+  textarea?: boolean;
+  accept?: string;
+  multiple?: boolean;
+};
+
+export type ProductFormErrors = {
+  title?: string[];
+  description?: string[];
+  price?: string[];
+  variants?: string[];
+  categories?: string[];
+  images?: string[];
+  general?: string[];
+};
+
+export type ProductActionState = {
+  errors?: ProductFormErrors;
+  inputs?: Record<string, unknown>;
 };
 
 export type Category_TP = { id: string; name: string };
@@ -95,40 +137,4 @@ export type User_TP = {
   emailVerified: boolean;
   role?: UserRole;
   actions?: string;
-};
-
-export type FormInput_TP = {
-  name?: string;
-  label?: string;
-  placeholder?: string;
-  value?: string | string[];
-  className?: string;
-  minlength?: number;
-  maxlength?: number;
-  step?: string;
-  type?: string;
-  error?: string;
-  onChange: (
-    e:
-      | React.ChangeEvent<HTMLInputElement, HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement, HTMLTextAreaElement>,
-  ) => void;
-  textarea?: boolean;
-  accept?: string;
-  multiple?: boolean;
-};
-
-export type ProductFormErrors = {
-  title?: string[];
-  description?: string[];
-  price?: string[];
-  variants?: string[];
-  categories?: string[];
-  images?: string[];
-  general?: string[];
-};
-
-export type ProductActionState = {
-  errors?: ProductFormErrors;
-  inputs?: Record<string, unknown>;
 };

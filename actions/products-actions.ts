@@ -111,6 +111,7 @@ export const AddProduct = async (
 export const getAllProducts = async () => {
   return await prisma.product.findMany();
 };
+
 export const getAllStock = async () => {
   return await prisma.product.findMany({
     include: {
@@ -121,40 +122,39 @@ export const getAllStock = async () => {
 };
 
 export const getProductsByFilter = async (
-  categoryIds: string[],
   searchText: string,
+  categoryId: string = "",
   page: number = 1,
-  pageSize: number = 8,
+  pageSize: number = 10,
 ) => {
   const where: Prisma.ProductWhereInput = {
     AND: [
-      {
-        OR: [
-          {
-            title: {
-              contains: searchText,
-              mode: Prisma.QueryMode.insensitive,
-            },
-          },
-          {
-            tags: {
-              has: searchText.toLowerCase(),
-            },
-          },
-        ],
-      },
-
-      ...(categoryIds.length > 0
+      ...(searchText.trim()
+        ? [
+            {
+              OR: [
+                {
+                  title: {
+                    contains: searchText,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+                {
+                  tags: {
+                    has: searchText.toLowerCase(),
+                  },
+                },
+              ],
+            } satisfies Prisma.ProductWhereInput,
+          ]
+        : []),
+      ...(categoryId
         ? [
             {
               categories: {
-                some: {
-                  id: {
-                    in: categoryIds,
-                  },
-                },
+                some: { id: categoryId },
               },
-            },
+            } satisfies Prisma.ProductWhereInput,
           ]
         : []),
     ],

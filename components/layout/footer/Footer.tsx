@@ -1,8 +1,10 @@
+import JoinCircleSection from "@/components/layout/footer/JoinCircleSection";
 import NavLink from "../header/NavLink";
 
 const Footer = () => {
   return (
     <footer>
+      <JoinCircleSection />
       <div className="container flex flex-col md:flex-row gap-8 md:gap-4 justify-between md:items-start py-8 md:py-12">
         <div className="space-y-4 max-w-xs">
           <h1 className="text-2xl md:text-4xl uppercase">zal</h1>

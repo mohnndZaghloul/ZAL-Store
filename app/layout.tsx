@@ -1,13 +1,15 @@
-import type { Metadata } from "next";
-import { Bodoni_Moda, Montserrat } from "next/font/google";
 import "./globals.css";
+import { Bodoni_Moda, Montserrat } from "next/font/google";
+import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
-import { ThemeProvider } from "@/components/header/theme-provider";
-import NavBar from "@/components/header/NavBar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+
+import AllProviders from "@/components/layout/AllProviders";
+import NavBar from "@/components/layout/header/NavBar";
 import SidebarCart from "@/components/cart/SidebarCart";
-import JoinCircleSection from "@/components/shop/JoinCircleSection";
-import Footer from "@/components/footer/Footer";
+import Footer from "@/components/layout/footer/Footer";
+import { SidebarInset } from "@/components/ui/sidebar";
+
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -43,28 +45,15 @@ export default function RootLayout({
         "font-sans",
       )}>
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange>
-          <SidebarProvider
-            defaultOpen={false}
-            style={
-              {
-                "--sidebar-width": "30rem",
-                "--sidebar-width-mobile": "20rem",
-              } as React.CSSProperties
-            }>
-            <SidebarInset>
-              <NavBar />
-              {children}
-              <JoinCircleSection />
-              <Footer />
-            </SidebarInset>
-            <SidebarCart />
-          </SidebarProvider>
-        </ThemeProvider>
+        <AllProviders>
+          <SidebarInset>
+            <NavBar />
+            {children}
+            <Footer />
+          </SidebarInset>
+          <SidebarCart />
+          <ReactQueryDevtools />
+        </AllProviders>
       </body>
     </html>
   );

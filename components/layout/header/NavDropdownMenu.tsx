@@ -6,12 +6,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "../../ui/dropdown-menu";
 import { LogOutIcon, CircleUserRound, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { useCartStore } from "@/store/cart";
 import { useFavStore } from "@/store/favorite";
 
