@@ -14,7 +14,6 @@ const FilterSection = () => {
   return (
     <>
       <ProductsFilter
-        query={query}
         setQuery={setQuery}
         category={category}
         setCategory={setCategory}

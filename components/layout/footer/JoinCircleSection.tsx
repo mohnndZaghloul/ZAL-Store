@@ -1,11 +1,17 @@
+import AnimatedBox from "@/components/shop/AnimatedBox";
+
 const JoinCircleSection = () => {
   return (
     <section className="bg-linear-45 from-primary/95 via-primary to-primary/95 text-primary-foreground  border-y py-12 md:py-24 flex flex-col justify-center items-center">
-      <h1 className="text-3xl md:text-5xl">Join the Inner Circle</h1>
-      <p className="text-center w-full max-w-sm text-xs md:text-sm text-primary-foreground/50 py-6 md:py-8 md:px-2 px-8">
-        Receive early access to new drops and exclusive streetwear editorials
-        directly to your inbox.
-      </p>
+      <AnimatedBox>
+        <h1 className="text-3xl md:text-5xl">Join the Inner Circle</h1>
+      </AnimatedBox>
+      <AnimatedBox>
+        <p className="text-center w-full max-w-sm text-xs md:text-sm text-primary-foreground/50 py-6 md:py-8 md:px-2 px-8">
+          Receive early access to new drops and exclusive streetwear editorials
+          directly to your inbox.
+        </p>
+      </AnimatedBox>
       <form>
         <div className="w-full md:min-w-sm flex justify-between border-b">
           <input

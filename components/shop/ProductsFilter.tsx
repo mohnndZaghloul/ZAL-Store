@@ -6,18 +6,12 @@ import { Button } from "../ui/button";
 import { Dispatch, SetStateAction, useState } from "react";
 
 type props_TP = {
-  query: string;
   setQuery: Dispatch<SetStateAction<string>>;
   category: string;
   setCategory: Dispatch<SetStateAction<string>>;
 };
 
-const ProductsFilter = ({
-  query,
-  setQuery,
-  category,
-  setCategory,
-}: props_TP) => {
+const ProductsFilter = ({ setQuery, category, setCategory }: props_TP) => {
   const [searchText, setSearchText] = useState("");
   const { data, isLoading } = useGetCategories();
 

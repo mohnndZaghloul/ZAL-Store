@@ -47,11 +47,11 @@ export default function NavBar() {
 
   return (
     <header className="sticky top-0 z-50 bg-background border-b border-secondary/40 shadow-2xl shadow-secondary/40">
-      <nav className="container h-full min-h-12 hidden sm:flex justify-between items-center">
+      <nav className="container h-full min-h-12 flex justify-between items-center">
         <div>
           <h1 className="text-primary font-semibold text-2xl">ZAL</h1>
         </div>
-        <ul className="flex items-center gap-10 text-sm">
+        <ul className="flex items-center gap-2 md:gap-10 text-xs md:text-sm">
           <li>
             <NavLink href="/">home</NavLink>
           </li>
@@ -62,7 +62,7 @@ export default function NavBar() {
             <NavLink href="/contact-us">contact us</NavLink>
           </li>
         </ul>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           <div>
             {data?.user ? (
               <Avatar>
