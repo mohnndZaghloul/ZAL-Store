@@ -6,16 +6,15 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
-import img from "@/public/images/gon&kelua.jpg";
 
-export default function CustomCarousel() {
+export default function CustomCarousel({ images }: { images: string[] }) {
   return (
     <Carousel className="">
       <CarouselContent>
-        {Array.from({ length: 5 }).map((_, index) => (
+        {images.map((image, index) => (
           <CarouselItem key={index}>
             <div className="relative aspect-3/4 p-1">
-              <Image src={img} alt="test" fill />
+              <Image src={image} alt={image} fill className="object-cover" />
             </div>
           </CarouselItem>
         ))}

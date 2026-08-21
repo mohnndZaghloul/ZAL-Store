@@ -2,6 +2,7 @@ import Image from "next/image";
 import SpecialButton from "../SpecialButton";
 import heroImage from "@/public/images/Ssum2640desk1726.webp";
 import AnimatedBox from "./AnimatedBox";
+import NavLink from "../layout/header/NavLink";
 
 const LandingHero = () => {
   return (
@@ -29,7 +30,9 @@ const LandingHero = () => {
           </p>
         </AnimatedBox>
         <AnimatedBox>
-          <SpecialButton>explore collection</SpecialButton>
+          <SpecialButton>
+            <NavLink href="./collections">explore collection</NavLink>
+          </SpecialButton>
         </AnimatedBox>
       </div>
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col justify-center items-center gap-2">

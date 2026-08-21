@@ -31,7 +31,7 @@ export default function NavLink({ href, className, children }: NavLink_TP) {
     <Link
       href={href}
       onClick={routingHandler}
-      className={`${className} relative group uppercase tracking-widest w-full block transition-colors`}>
+      className={`${className} relative group uppercase tracking-widest w-full block transition`}>
       {children}
       <span
         className={`absolute bottom-0 left-0 h-px bg-primary group-hover:w-1/2 group-hover:translate-x-1/2 ${path.endsWith(href) ? "w-full" : "w-0"} transition-all duration-300`}
