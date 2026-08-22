@@ -12,13 +12,26 @@ import {
 } from "@/components/ui/sidebar";
 import { XIcon, ShoppingBag, Minus, Plus } from "lucide-react";
 import { Button } from "../ui/button";
-import useGetCart from "@/hooks/useGetCart";
+import {
+  useAddToCart,
+  useDecrementFromCart,
+  useGetCart,
+} from "@/hooks/useCart";
 import Image from "next/image";
-import { addToCart, decrementFromCart } from "@/actions/cart-actions";
 
 export default function SidebarCart() {
   const { setOpen } = useSidebar();
   const { data } = useGetCart();
+  const addMutation = useAddToCart();
+  const decrementMutation = useDecrementFromCart();
+
+  const handleAddToCart = (productId: string, variantId: string) => {
+    addMutation.mutate({ productId, variantId, quantity: 1 });
+  };
+
+  const handleDecrement = (cartItemId: string, quantity: number) => {
+    decrementMutation.mutate({ cartItemId, quantity });
+  };
 
   return (
     <Sidebar side="right">
@@ -64,20 +77,16 @@ export default function SidebarCart() {
                   <div className="flex mt-2 w-fit items-center gap-2 md:gap-4 border p-1">
                     <Button
                       variant="ghost"
-                      onClick={async () =>
-                        await decrementFromCart(product.id, product.quantity)
+                      onClick={() =>
+                        handleDecrement(product.id, product.quantity)
                       }>
                       <Minus className="w-4 h-4 md:w-8 md:h-8" />
                     </Button>
                     {product.quantity}
                     <Button
                       variant="ghost"
-                      onClick={async () =>
-                        await addToCart(
-                          product.id,
-                          product.variantId,
-                          product.quantity,
-                        )
+                      onClick={() =>
+                        handleAddToCart(product.productId!, product.variantId)
                       }>
                       <Plus className="w-4 h-4 md:w-8 md:h-8" />
                     </Button>
