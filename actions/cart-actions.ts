@@ -47,13 +47,9 @@ export const addToCart = async (
 
 export const removeFromCart = async (CartItemId: string) => {
   const owner = await getCartOwner();
-
-  // deleteMany + owner in the where clause means: delete this row only if
-  // it actually belongs to the current user/guest. Deletes 0 rows if not.
   await prisma.cartItem.deleteMany({
     where: { id: CartItemId, ...owner },
   });
-  revalidatePath("/cart");
 };
 
 export const decrementFromCart = async (

@@ -7,11 +7,12 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { addToCart } from "@/actions/cart-actions";
 import { useCartStore } from "@/store/cart";
+import { useAddToCart } from "@/hooks/useCart";
 
 export default function AddToCartSection({ product }: { product: Product_TP }) {
   const [variantId, setVariantId] = useState(product?.variants?.[0].id);
   const [quantity, setQuantity] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const addMutation = useAddToCart();
   const CartCount = useCartStore((state) => state.count);
   const setCartCount = useCartStore((state) => state.setCartCount);
 
@@ -28,14 +29,17 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
       setQuantity((prev) => --prev);
     }
   };
-  const handleAddToCart = async () => {
-    setIsLoading(true);
+
+  const handleAddToCart = () => {
     const variant = product.variants?.find(
       (variant) => variant.id == variantId,
     );
-    await addToCart(product.id, variant?.id!, quantity);
+    addMutation.mutate({
+      productId: product.id,
+      variantId: variant?.id!,
+      quantity,
+    });
     setCartCount(CartCount + quantity);
-    setIsLoading(false);
   };
 
   return (
@@ -67,10 +71,10 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
           </Button>
         </div>
         <SpecialButton
-          disable={isLoading}
+          disable={addMutation.isPending}
           onClick={async () => await handleAddToCart()}
           className="w-full">
-          {isLoading ? "adding..." : "add to cart"}
+          {addMutation.isPending ? "adding..." : "add to cart"}
         </SpecialButton>
       </div>
       <SpecialButton className="w-full">buy now</SpecialButton>

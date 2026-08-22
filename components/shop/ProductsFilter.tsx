@@ -31,7 +31,7 @@ const ProductsFilter = ({ setQuery, category, setCategory }: props_TP) => {
                 placeholder="t-shirt..."
                 onChange={(e) => setSearchText(e.target.value)}
                 value={searchText}
-                className="w-full min-w-[18rem] md:min-w-sm"
+                className="w-full min-w-[16rem] md:min-w-sm"
               />
             </div>
             <Button

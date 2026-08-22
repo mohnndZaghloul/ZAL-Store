@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "./header/theme-provider";
 import { SidebarProvider } from "../ui/sidebar";
@@ -9,7 +10,7 @@ const AllProviders = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const queryClient = new QueryClient();
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
     <ThemeProvider
@@ -23,7 +24,7 @@ const AllProviders = ({
           style={
             {
               "--sidebar-width": "30rem",
-              "--sidebar-width-mobile": "20rem",
+              "--sidebar-width-mobile": "24rem",
             } as React.CSSProperties
           }>
           {children}

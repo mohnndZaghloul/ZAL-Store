@@ -4,6 +4,7 @@ import {
   addToCart,
   decrementFromCart,
   getCartProducts,
+  removeFromCart,
 } from "@/actions/cart-actions";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -43,6 +44,17 @@ export const useDecrementFromCart = () => {
   return useMutation({
     mutationFn: ({ cartItemId, quantity }: DecrementMutation) =>
       decrementFromCart(cartItemId, quantity),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+  });
+};
+
+export const useRemoveFromCart = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (CartItemId: string) => removeFromCart(CartItemId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
