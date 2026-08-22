@@ -72,6 +72,10 @@ model Order {
   id                  String      @id @default(uuid())
   userId              String
   user                User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customerName        String
+  customerPhone       String
+  address             String
+  city                String
   amount              Int
   currency            String      @default("EGP")
   status              String      @default("PENDING")

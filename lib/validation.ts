@@ -79,3 +79,12 @@ export const ProductSchema = z.object({
 
 export type ProductFormInput = z.input<typeof ProductSchema>;
 export type ProductFormData = z.output<typeof ProductSchema>;
+
+export const checkoutSchema = z.object({
+  name: z.string().min(3, "Name is too short"),
+  phone: z.string().min(10, "Enter a valid phone number"),
+  address: z.string().min(10, "Address is too short"),
+  city: z.string().min(2, "City is required"),
+});
+
+export type CheckoutFormValues = z.infer<typeof checkoutSchema>;

@@ -138,3 +138,16 @@ export type User_TP = {
   role?: UserRole;
   actions?: string;
 };
+
+export type CheckoutItem_TP = {
+  cartItemId?: string;
+  variantId: string;
+  productId: string;
+  title: string;
+  image: string;
+  size: string;
+  color: string;
+  price: number;
+  quantity: number;
+  stock: number;
+};

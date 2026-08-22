@@ -88,7 +88,7 @@ export default async function ProductDetailsPage({ params }: Props_TP) {
               <div>
                 {product.variants?.map((variant) => (
                   <p>
-                    {variant.size}-{variant.stock}
+                    size :{variant.size}- in stock{variant.stock}
                   </p>
                 ))}
               </div>

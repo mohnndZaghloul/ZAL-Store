@@ -11,6 +11,7 @@ import { useSession } from "@/lib/auth-client";
 import { SidebarTrigger } from "../../ui/sidebar";
 import { Button } from "../../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import Link from "next/link";
 
 export default function NavBar() {
   const session: any = useSession;
@@ -37,7 +38,9 @@ export default function NavBar() {
     <header className="sticky py-1 top-0 z-50 bg-background border-b border-secondary/40 shadow-2xl shadow-secondary/40">
       <nav className="container h-full min-h-12 flex justify-between items-center">
         <div>
-          <h1 className="text-primary font-semibold text-2xl">ZAL</h1>
+          <h1 className="text-primary font-semibold text-2xl">
+            <NavLink href="./">ZAL</NavLink>
+          </h1>
         </div>
         <ul className="flex items-center gap-2 md:gap-10 text-xs md:text-sm">
           <li>
@@ -45,6 +48,9 @@ export default function NavBar() {
           </li>
           <li>
             <NavLink href="/collections">collections</NavLink>
+          </li>
+          <li>
+            <NavLink href="/orders">orders</NavLink>
           </li>
         </ul>
         <div className="flex items-center gap-2 md:gap-4">

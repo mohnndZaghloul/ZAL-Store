@@ -5,9 +5,9 @@ import { Product_TP } from "@/types";
 import { Plus, Minus } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
-import { addToCart } from "@/actions/cart-actions";
 import { useCartStore } from "@/store/cart";
 import { useAddToCart } from "@/hooks/useCart";
+import Link from "next/link";
 
 export default function AddToCartSection({ product }: { product: Product_TP }) {
   const [variantId, setVariantId] = useState(product?.variants?.[0].id);
@@ -77,7 +77,11 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
           {addMutation.isPending ? "adding..." : "add to cart"}
         </SpecialButton>
       </div>
-      <SpecialButton className="w-full">buy now</SpecialButton>
+      <SpecialButton className="w-full">
+        <Link href={`./checkout?variantId=${variantId}&quantity=${quantity}`}>
+          buy now
+        </Link>
+      </SpecialButton>
       <div className="text-sm">{product.description}</div>
     </section>
   );
