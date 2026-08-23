@@ -3,27 +3,21 @@ import NavLink from "./NavLink";
 import { ShoppingBag, User } from "lucide-react";
 import { Badge } from "../../ui/badge";
 import { useCartStore } from "@/store/cart";
-// import { useFavStore } from "@/store/favorite";
 import { getCart } from "@/actions/cart-actions";
 import { useEffect } from "react";
-// import { getFav } from "@/actions/favorite-actions";
 import { useSession } from "@/lib/auth-client";
 import { SidebarTrigger } from "../../ui/sidebar";
 import { Button } from "../../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
-import Link from "next/link";
 
 export default function NavBar() {
-  const session: any = useSession;
-  const { data, isPending } = session;
+  const { data, isPending } = useSession();
 
   const CartCount = useCartStore((state) => state.count);
   const setCartCount = useCartStore((state) => state.setCartCount);
-  // const FavCount = useFavStore((state) => state.count);
-  // const setFavCount = useFavStore((state) => state.setFavCount);
 
   useEffect(() => {
-    setCartCount(0);
+    if (isPending) return;
 
     const loadNav = async () => {
       const cart = await getCart();
@@ -32,7 +26,7 @@ export default function NavBar() {
     };
 
     loadNav();
-  }, [data?.user?.id, setCartCount]);
+  }, [data?.user?.id, isPending, setCartCount]);
 
   return (
     <header className="sticky py-1 top-0 z-50 bg-background border-b border-secondary/40 shadow-2xl shadow-secondary/40">
@@ -49,21 +43,18 @@ export default function NavBar() {
           <li>
             <NavLink href="/collections">collections</NavLink>
           </li>
-          <li>
-            <NavLink href="/orders">orders</NavLink>
-          </li>
         </ul>
         <div className="flex items-center gap-2 md:gap-4">
           <div>
             {data?.user ? (
-              <Avatar>
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                  className="grayscale"
-                />
-                <AvatarFallback className="text-primary">CN</AvatarFallback>
-              </Avatar>
+              <NavLink href="./dashboard">
+                <Avatar>
+                  <AvatarImage src={data?.user?.image!} alt="admin" />
+                  <AvatarFallback className="text-primary">
+                    {data?.user?.name[0]}
+                  </AvatarFallback>
+                </Avatar>
+              </NavLink>
             ) : (
               <NavLink href="/login" className="hover:text-primary transition">
                 <User />

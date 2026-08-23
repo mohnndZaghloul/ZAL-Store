@@ -7,12 +7,13 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { useCartStore } from "@/store/cart";
 import { useAddToCart } from "@/hooks/useCart";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function AddToCartSection({ product }: { product: Product_TP }) {
   const [variantId, setVariantId] = useState(product?.variants?.[0].id);
   const [quantity, setQuantity] = useState(1);
   const addMutation = useAddToCart();
+  const router = useRouter();
   const CartCount = useCartStore((state) => state.count);
   const setCartCount = useCartStore((state) => state.setCartCount);
 
@@ -40,6 +41,10 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
       quantity,
     });
     setCartCount(CartCount + quantity);
+  };
+
+  const handleCheckout = () => {
+    router.push(`./checkout?variantId=${variantId}&quantity=${quantity}`);
   };
 
   return (
@@ -77,10 +82,8 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
           {addMutation.isPending ? "adding..." : "add to cart"}
         </SpecialButton>
       </div>
-      <SpecialButton className="w-full">
-        <Link href={`./checkout?variantId=${variantId}&quantity=${quantity}`}>
-          buy now
-        </Link>
+      <SpecialButton className="w-full" onClick={handleCheckout}>
+        buy now
       </SpecialButton>
       <div className="text-sm">{product.description}</div>
     </section>

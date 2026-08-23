@@ -1,8 +1,5 @@
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
-import { getCurrentUser } from "@/actions/customers-actions";
-import { Button } from "@/components/ui/button";
 import { resolveCheckoutData } from "@/lib/checkout";
 import CheckoutForm from "@/components/forms/CheckoutForm";
 
@@ -17,13 +14,8 @@ export default async function CheckoutPage({
   if (!checkoutData) {
     // Buy Now with a bad/expired variant -> back to home.
     // Empty cart checkout -> back to the cart.
-    redirect("/");
+    redirect(variantId ? "/" : "/cart");
   }
-
-  const user = await getCurrentUser();
-  const returnUrl = variantId
-    ? `/checkout?variantId=${variantId}&quantity=${quantity ?? 1}`
-    : "/checkout";
 
   return (
     <div className="container py-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -32,22 +24,7 @@ export default async function CheckoutPage({
           Shipping & Payment
         </h1>
 
-        {user ? (
-          <CheckoutForm variantId={variantId} quantity={quantity} />
-        ) : (
-          <div className="border p-6 text-center space-y-4">
-            <p className="text-neutral">
-              Sign in to place your order — browsing and your cart don&apos;t
-              require an account, but confirming an order does.
-            </p>
-            <Button>
-              <Link
-                href={`/login?callbackUrl=${encodeURIComponent(returnUrl)}`}>
-                Sign in to continue
-              </Link>
-            </Button>
-          </div>
-        )}
+        <CheckoutForm variantId={variantId} quantity={quantity} />
       </div>
 
       <div className="bg-tertiary p-6 border">
@@ -68,12 +45,7 @@ export default async function CheckoutPage({
               <div className="flex-1">
                 <p className="text-sm font-medium">{item.title}</p>
                 <p className="text-xs text-neutral">
-                  Size : {item.size} - Color :{" "}
-                  <span
-                    style={{ background: item.color }}
-                    className="rounded-full inline-block w-3 aspect-square"
-                  />{" "}
-                  × {item.quantity}
+                  {item.size} / {item.color} × {item.quantity}
                 </p>
               </div>
               <p className="text-sm font-medium text-nowrap">

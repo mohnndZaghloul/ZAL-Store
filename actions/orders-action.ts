@@ -17,9 +17,9 @@ export async function createOrder(
   formData: FormData,
 ): Promise<OrderActionState> {
   const user = await getCurrentUser();
-  if (!user) {
-    return { message: "Please sign in to place your order." };
-  }
+  // if (!user) {
+  //   return { message: "Please sign in to place your order." };
+  // }
 
   const parsed = checkoutSchema.safeParse({
     name: formData.get("name"),
@@ -44,7 +44,7 @@ export async function createOrder(
     orderId = await prisma.$transaction(async (tx) => {
       const order = await tx.order.create({
         data: {
-          userId: user.id,
+          userId: user?.id,
           amount: Math.round(checkoutData.subtotal),
           currency: "EGP",
           status: "PENDING",
@@ -84,24 +84,12 @@ export async function createOrder(
       return order.id;
     });
   } catch (err) {
-    console.error("CREATE ORDER ERROR:", err);
-
-    if (err instanceof Error) {
-      console.error("MESSAGE:", err.message);
-      console.error("STACK:", err.stack);
-    }
-
     const msg = err instanceof Error ? err.message : "";
-
     if (msg.startsWith("OUT_OF_STOCK:")) {
-      return {
-        message: `Sorry, "${msg.split(":")[1]}" just sold out.`,
-      };
+      return { message: `Sorry, "${msg.split(":")[1]}" just sold out.` };
     }
-
-    return {
-      message: msg || "Something went wrong placing your order.",
-    };
+    console.error("createOrder failed:", err);
+    return { message: "Something went wrong placing your order." };
   }
 
   redirect(`/orders/${orderId}/confirmation`);
