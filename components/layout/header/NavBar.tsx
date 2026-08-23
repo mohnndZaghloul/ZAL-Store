@@ -47,7 +47,7 @@ export default function NavBar() {
         <div className="flex items-center gap-2 md:gap-4">
           <div>
             {data?.user ? (
-              <NavLink href="./dashboard">
+              <NavLink href="/dashboard">
                 <Avatar>
                   <AvatarImage src={data?.user?.image!} alt="admin" />
                   <AvatarFallback className="text-primary">
