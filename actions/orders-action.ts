@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/actions/customers-actions";
 import { checkoutSchema } from "@/lib/validation";
 import { resolveCheckoutData } from "@/lib/checkout";
+import { OrderStatus, Prisma } from "@/generated/prisma/client";
+import { revalidatePath } from "next/cache";
 
 export type OrderActionState = {
   errors?: Record<string, string[]>;
@@ -47,7 +49,6 @@ export async function createOrder(
           userId: user?.id,
           amount: Math.round(checkoutData.subtotal),
           currency: "EGP",
-          status: "PENDING",
           customerName: parsed.data.name,
           customerPhone: parsed.data.phone,
           address: parsed.data.address,
@@ -93,4 +94,47 @@ export async function createOrder(
   }
 
   redirect(`/orders/${orderId}/confirmation`);
+}
+
+const orderWithItems = {
+  include: {
+    items: {
+      include: {
+        variant: {
+          include: { product: true },
+        },
+      },
+    },
+  },
+};
+
+export type OrderWithItems = Prisma.OrderGetPayload<typeof orderWithItems>;
+
+export async function getAllOrders(): Promise<OrderWithItems[]> {
+  try {
+    return await prisma.order.findMany({
+      include: orderWithItems.include,
+      orderBy: { createdAt: "desc" },
+    });
+  } catch (error) {
+    console.error("getAllOrders failed:", error);
+    throw new Error("Failed to load orders.");
+  }
+}
+
+export async function updateOrderStatus(orderId: string, status: OrderStatus) {
+  try {
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { status },
+    });
+    revalidatePath("/dashboard/orders"); // adjust to your actual orders page route
+    return { success: true as const };
+  } catch (error) {
+    console.error("updateOrderStatus failed:", error);
+    return {
+      success: false as const,
+      message: "Failed to update order status.",
+    };
+  }
 }

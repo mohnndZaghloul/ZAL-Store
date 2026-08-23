@@ -1,4 +1,4 @@
-import { UserRole } from "@/generated/prisma/enums";
+import { OrderStatus, UserRole } from "@/generated/prisma/enums";
 
 export type Product_TP = {
   id: string;
@@ -6,14 +6,49 @@ export type Product_TP = {
   description: string;
   price: number;
   images: string[];
+  tags: string[];
   createAt: Date;
+  UpdateAt: Date;
+  createdById: string | null;
   variants?: stock_TP[];
-  tags?: string[];
   actions?: string;
   categories?: {
     id: string;
     name: string;
   }[];
+};
+export type Variant_TP = {
+  id: string;
+  size: string;
+  color: string;
+  stock: number;
+  priceModifier: number;
+  productId: string;
+  product: Product_TP;
+};
+export type OrderItem_TP = {
+  id: string;
+  orderId: string;
+  variantId: string;
+  quantity: number;
+  priceAtPurchase: number;
+  variant: Variant_TP;
+};
+export type Orders_TP = {
+  id: string;
+  userId: string | null;
+  amount: number;
+  currency: string;
+  status: OrderStatus;
+  paymobOrderId: string | null;
+  paymobTransactionId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  address: string;
+  city: string;
+  customerName: string;
+  customerPhone: string;
+  items: OrderItem_TP[];
 };
 
 export type FilterData_TP = {

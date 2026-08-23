@@ -1,6 +1,6 @@
 import { ProductsColumns } from "@/components/dashboard/tables/TabelsColumns";
 import { DataTable } from "@/components/dashboard/tables/data-table";
-import { Box, CirclePlusIcon } from "lucide-react";
+import { Box, CirclePlusIcon, Shirt } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
@@ -21,8 +21,8 @@ export default async function ProductsPage() {
     <main className="p-6">
       <div className="flex justify-between items-center">
         <h1 className="text-xl md:text-2xl uppercase font-bold mb-4 flex items-center gap-2">
-          <Box />
-          your products
+          <Shirt />
+          products
         </h1>
         <Button
           className="capitalize shadow rounded-none hover:shadow-primary border-0"

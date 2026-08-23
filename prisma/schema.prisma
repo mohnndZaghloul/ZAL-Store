@@ -78,7 +78,7 @@ model Order {
   city                String
   amount              Int
   currency            String      @default("EGP")
-  status              String      @default("PENDING")
+  status              OrderStatus @default(PENDING)
   paymobOrderId       String?     @unique
   paymobTransactionId String?     @unique
   createdAt           DateTime    @default(now())
@@ -197,4 +197,12 @@ enum size {
   L
   XL
   XXL
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
 }

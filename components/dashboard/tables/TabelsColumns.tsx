@@ -11,7 +11,7 @@ import Image from "next/image";
 import { Skeleton } from "../../ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import Link from "next/link";
-import { User_TP, Product_TP, Role_TP } from "@/types/index";
+import { User_TP, Product_TP, Role_TP, Orders_TP } from "@/types/index";
 import {
   Select,
   SelectContent,
@@ -307,3 +307,125 @@ export const ProductsColumns: ColumnDef<Product_TP>[] = [
     },
   },
 ];
+// export const OrdersColumns: ColumnDef<Orders_TP>[] = [
+//   {
+//     id: "select",
+//     header: ({ table }) => (
+//       <Checkbox
+//         className="mx-auto"
+//         checked={
+//           table.getIsAllPageRowsSelected() ||
+//           (table.getIsSomePageRowsSelected() && false)
+//         }
+//         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+//         aria-label="Select all"
+//       />
+//     ),
+//     cell: ({ row }) => (
+//       <Checkbox
+//         className="mx-auto"
+//         checked={row.getIsSelected()}
+//         onCheckedChange={(value) => row.toggleSelected(!!value)}
+//         aria-label="Select row"
+//       />
+//     ),
+//     enableSorting: false,
+//     enableHiding: false,
+//   },
+//   {
+//     accessorKey: "title",
+//     header: ({ column }) => {
+//       return (
+//         <Button
+//           variant="ghost"
+//           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+//           Title
+//           <ArrowUpDown className="ml-2 h-4 w-4" />
+//         </Button>
+//       );
+//     },
+//   },
+//   {
+//     accessorKey: "price",
+//     header: "Price",
+//     cell: ({ row }) => (
+//       <p className="text-primary font-semibold">{row.original.} EGP</p>
+//     ),
+//   },
+//   {
+//     accessorKey: "size",
+//     header: "Size",
+//     cell: ({ row }) => (
+//       <>
+//         {row.original.variants?.map((stock) => (
+//           <p key={stock.id} className="text-lg font-semibold">
+//             {stock.size}
+//           </p>
+//         ))}
+//       </>
+//     ),
+//   },
+//   {
+//     accessorKey: "color",
+//     header: "Color",
+//     cell: ({ row }) => (
+//       <div className="space-y-2">
+//         {row.original.variants?.map((stock) => (
+//           <div
+//             key={stock.id}
+//             style={{ background: stock.color }}
+//             className="h-5 w-5 rounded-full"
+//           />
+//         ))}
+//       </div>
+//     ),
+//   },
+//   {
+//     accessorKey: "stock",
+//     header: "Stock",
+//     cell: ({ row }) => (
+//       <>
+//         {row.original.variants?.map((stock) => (
+//           <p key={stock.id} className="text-lg">
+//             {stock.stock}
+//           </p>
+//         ))}
+//       </>
+//     ),
+//   },
+//   {
+//     accessorKey: "createAt",
+//     header: "Created",
+//     cell: ({ row }) => {
+//       const date = row.getValue("createAt") as Date;
+//       return date.toLocaleDateString("en-US");
+//     },
+//   },
+//   {
+//     accessorKey: "actions",
+//     header: ({ column }) => (
+//       <span className="text-center capitalize">actions</span>
+//     ),
+//     cell: ({ row }) => {
+//       return (
+//         <div className="space-x-2 flex justify-center items-center">
+//           <Button
+//             variant="outline"
+//             className="cursor-pointer capitalize"
+//             nativeButton={false}
+//             render={<Link href={`./products/${row.original.id}`}>edit</Link>}
+//           />
+//           <DeleteButton
+//             title="delete product"
+//             description="are you sure you want delete this product?"
+//             onClick={async () => {
+//               await deleteProduct(row.original.id);
+//             }}>
+//             <Trash2 />
+//             delete
+//           </DeleteButton>
+//         </div>
+//       );
+//     },
+//   },
+// ];

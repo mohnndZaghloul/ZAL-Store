@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   ListOrderedIcon,
   MonitorCog,
+  Shirt,
   User2,
 } from "lucide-react";
 import { JSX } from "react";
@@ -34,15 +35,15 @@ export const sidebarLinks: SidebarLink[] = [
   {
     label: "Products",
     url: "/dashboard/products",
-    icon: <BoxIcon />,
+    icon: <Shirt />,
     roles: ["ADMIN", "USER"],
   },
-  // {
-  //   label: "My Orders",
-  //   url: "/dashboard/orders",
-  //   icon: <ListOrderedIcon />,
-  //   roles: ["ADMIN", "USER"],
-  // },
+  {
+    label: "My Orders",
+    url: "/dashboard/orders",
+    icon: <BoxIcon />,
+    roles: ["ADMIN"],
+  },
   // {
   //   label: "Customers",
   //   url: routes.customers,

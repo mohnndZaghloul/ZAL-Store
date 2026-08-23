@@ -10,13 +10,13 @@ export default function proxy(req: NextRequest) {
     req.nextUrl.pathname.startsWith("/login") ||
     req.nextUrl.pathname.startsWith("/sign-up");
 
-  // if (isDashboard && !session) {
-  //   return NextResponse.redirect(new URL("/login", req.url));
-  // }
+  if (isDashboard && !session) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
 
-  // if (isAuthPage && session) {
-  //   return NextResponse.redirect(new URL("/dashboard", req.url));
-  // }
+  if (isAuthPage && session) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
 
   return NextResponse.next();
 }
