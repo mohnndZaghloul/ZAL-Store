@@ -15,6 +15,7 @@ const productSizes = [
 ] as const;
 
 export const ProductVariantSchema = z.object({
+  id: z.string().optional(),
   size: z.enum(productSizes, { error: "Invalid size" }),
   color: z
     .string()

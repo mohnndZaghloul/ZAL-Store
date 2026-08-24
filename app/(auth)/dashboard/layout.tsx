@@ -14,7 +14,10 @@ export default function DashboardLayout({
     <SidebarProvider>
       <DashboardSidebar />
       <SidebarInset>
-        <SidebarTrigger size="icon-lg" />
+        <SidebarTrigger
+          size="icon-lg"
+          className="sticky top-16 z-50 bg-primary text-primary-foreground"
+        />
         {children}
       </SidebarInset>
     </SidebarProvider>

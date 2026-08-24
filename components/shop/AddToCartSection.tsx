@@ -54,6 +54,18 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
         <div className="flex gap-4 pt-2">
           {product?.variants?.map((item) => {
             const isSelected = item.id === variantId;
+            if (item.stock === 0) {
+              return (
+                <div className="group space-x-2">
+                  <SpecialButton key={item.id} destructive>
+                    {item.size}
+                  </SpecialButton>
+                  <span className="text-destructive  group-focus-within:opacity-100 opacity-0">
+                    out of stock
+                  </span>
+                </div>
+              );
+            }
             return (
               <SpecialButton
                 key={item.id}

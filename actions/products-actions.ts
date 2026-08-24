@@ -81,10 +81,30 @@ export const AddProduct = async (
       if (meta.mode !== "add-product" && !meta.productId) {
         throw new Error("Product ID is required for update");
       }
+
+      // Diff against what's actually in the DB instead of wiping and
+      // recreating everything — deleting a variant that an order already
+      // references violates the OrderItem foreign key and corrupts order
+      // history, which is exactly what just happened.
+      const existingVariants = await prisma.productVariant.findMany({
+        where: { productId: meta.productId },
+        select: { id: true },
+      });
+      const existingIds = new Set(existingVariants.map((v) => v.id));
+      const submittedIds = new Set(
+        variants.filter((v) => v.id).map((v) => v.id as string),
+      );
+
+      // Anything without an id, or with an id that no longer matches a
+      // real row (shouldn't normally happen, but avoids silently losing
+      // it if it does) counts as a new row to create.
+      const toCreate = variants.filter((v) => !v.id || !existingIds.has(v.id));
+      const toUpdate = variants.filter((v) => v.id && existingIds.has(v.id));
+      const toDeleteIds = [...existingIds].filter(
+        (id) => !submittedIds.has(id),
+      );
+
       await prisma.$transaction([
-        prisma.productVariant.deleteMany({
-          where: { productId: meta.productId },
-        }),
         prisma.product.update({
           where: { id: meta.productId },
           data: {
@@ -93,15 +113,70 @@ export const AddProduct = async (
             price,
             images,
             categories: { set: categories.map((id) => ({ id })) },
-            variants: { createMany: { data: variants } },
           },
         }),
+        ...toUpdate.map((v) =>
+          prisma.productVariant.update({
+            where: { id: v.id },
+            data: { size: v.size, color: v.color, stock: v.stock },
+          }),
+        ),
+        ...(toCreate.length > 0
+          ? [
+              prisma.productVariant.createMany({
+                data: toCreate.map((v) => ({
+                  productId: meta.productId!,
+                  size: v.size,
+                  color: v.color,
+                  stock: v.stock,
+                })),
+              }),
+            ]
+          : []),
+        ...(toDeleteIds.length > 0
+          ? [
+              prisma.productVariant.deleteMany({
+                where: { id: { in: toDeleteIds } },
+              }),
+            ]
+          : []),
       ]);
     }
   } catch (error) {
     console.error("AddProduct error:", error);
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2003") {
+        return {
+          errors: {
+            ...emptyErrors,
+            variants: [
+              "One of the removed sizes already has orders placed against it and can't be deleted. Set its stock to 0 instead of removing it.",
+            ],
+          },
+          inputs: rawData,
+        };
+      }
+      if (error.code === "P2002") {
+        return {
+          errors: {
+            ...emptyErrors,
+            variants: [
+              "Two sizes have the same size/color combination — each must be unique.",
+            ],
+          },
+          inputs: rawData,
+        };
+      }
+    }
+
     return {
-      errors: { ...emptyErrors, general: [`${error}`] },
+      errors: {
+        ...emptyErrors,
+        general: [
+          "Something went wrong saving this product. Please try again.",
+        ],
+      },
       inputs: rawData,
     };
   }

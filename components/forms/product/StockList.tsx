@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { stock_TP } from "@/types";
-import { Trash } from "lucide-react";
+import { Check, Pencil, Trash, X } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type stockList_TP = {
@@ -29,6 +29,8 @@ const defaultStockValues: stock_TP = {
 const StockList = ({ stockList, setStockList, error }: stockList_TP) => {
   const [values, setValues] = useState<stock_TP>(defaultStockValues);
   const [localColor, setLocalColor] = useState(values.color);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editValue, setEditValue] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -47,6 +49,25 @@ const StockList = ({ stockList, setStockList, error }: stockList_TP) => {
 
   const deleteFromStock = (stockIndex: number) => {
     setStockList((prev) => prev.filter((stock, index) => index !== stockIndex));
+    if (editingIndex === stockIndex) setEditingIndex(null);
+  };
+
+  const startEdit = (index: number, currentStock: number) => {
+    setEditingIndex(index);
+    setEditValue(currentStock);
+  };
+
+  const cancelEdit = () => {
+    setEditingIndex(null);
+  };
+
+  const saveEdit = (index: number) => {
+    setStockList((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, stock: editValue } : item,
+      ),
+    );
+    setEditingIndex(null);
   };
 
   return (
@@ -68,25 +89,71 @@ const StockList = ({ stockList, setStockList, error }: stockList_TP) => {
               </td>
             </tr>
           )}
-          {stockList.map((item, index) => (
-            <tr key={index} className="border-b ">
-              <td className="p-2">{item.size}</td>
-              <td className="p-2">
-                <div
-                  style={{ background: item.color }}
-                  className={`h-5 w-5 rounded-full mx-auto`}
-                />
-              </td>
-              <td className="p-2">{item.stock}</td>
-              <td className="flex justify-center p-2">
-                <Button
-                  onClick={() => deleteFromStock(index)}
-                  variant="destructive">
-                  <Trash size={16} />
-                </Button>
-              </td>
-            </tr>
-          ))}
+          {stockList.map((item, index) => {
+            const isEditing = editingIndex === index;
+
+            return (
+              <tr key={index} className="border-b ">
+                <td className="p-2">{item.size}</td>
+                <td className="p-2">
+                  <div
+                    style={{ background: item.color }}
+                    className={`h-5 w-5 rounded-full mx-auto`}
+                  />
+                </td>
+                <td className="p-2">
+                  {isEditing ? (
+                    <Input
+                      type="number"
+                      min={0}
+                      value={editValue}
+                      onChange={(e) => setEditValue(Number(e.target.value))}
+                      className="w-20 mx-auto text-center"
+                      autoFocus
+                    />
+                  ) : (
+                    item.stock
+                  )}
+                </td>
+                <td className="flex justify-center gap-2 p-2">
+                  {isEditing ? (
+                    <>
+                      <Button
+                        onClick={() => saveEdit(index)}
+                        size="icon"
+                        type="button">
+                        <Check size={16} />
+                      </Button>
+                      <Button
+                        onClick={cancelEdit}
+                        variant="outline"
+                        size="icon"
+                        type="button">
+                        <X size={16} />
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        onClick={() => startEdit(index, item.stock)}
+                        variant="outline"
+                        size="icon"
+                        type="button">
+                        <Pencil size={16} />
+                      </Button>
+                      <Button
+                        onClick={() => deleteFromStock(index)}
+                        variant="destructive"
+                        size="icon"
+                        type="button">
+                        <Trash size={16} />
+                      </Button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       <div className="flex items-end gap-2 pt-4">
@@ -148,7 +215,10 @@ const StockList = ({ stockList, setStockList, error }: stockList_TP) => {
           name="variants"
           value={JSON.stringify(stockList)}
         />
-        <Button onClick={addStock} className="text-sm rounded-none">
+        <Button
+          onClick={addStock}
+          className="text-sm rounded-none"
+          type="button">
           Add to Stock
         </Button>
       </div>
