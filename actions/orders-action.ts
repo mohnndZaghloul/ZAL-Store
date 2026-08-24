@@ -93,7 +93,7 @@ export async function createOrder(
     return { message: "Something went wrong placing your order." };
   }
 
-  redirect(`/orders/${orderId}/confirmation`);
+  redirect(`/orders/${orderId}`);
 }
 
 const orderWithItems = {
