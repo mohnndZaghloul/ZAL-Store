@@ -1,15 +1,27 @@
+import { getCurrentUser } from "@/actions/customers-actions";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { redirect } from "next/navigation";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect("/login?callbackUrl=/dashboard");
+  }
+
+  if (user.role !== "ADMIN") {
+    redirect("/");
+  }
+
   return (
     <SidebarProvider>
       <DashboardSidebar />

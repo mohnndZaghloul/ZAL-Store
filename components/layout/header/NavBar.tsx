@@ -9,6 +9,7 @@ import { useSession } from "@/lib/auth-client";
 import { SidebarTrigger } from "../../ui/sidebar";
 import { Button } from "../../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import NavDropdownMenu from "./NavDropdownMenu";
 
 export default function NavBar() {
   const { data, isPending } = useSession();
@@ -47,15 +48,16 @@ export default function NavBar() {
         <div className="flex items-center gap-2 md:gap-4">
           <div>
             {data?.user ? (
-              <NavLink href="/dashboard">
-                <Avatar>
-                  <AvatarImage src={data?.user?.image!} alt="admin" />
-                  <AvatarFallback className="text-primary">
-                    {data?.user?.name[0]}
-                  </AvatarFallback>
-                </Avatar>
-              </NavLink>
+              <NavDropdownMenu data={data} />
             ) : (
+              // <NavLink href="/dashboard">
+              //   <Avatar>
+              //     <AvatarImage src={data?.user?.image!} alt="admin" />
+              //     <AvatarFallback className="text-primary">
+              //       {data?.user?.name[0]}
+              //     </AvatarFallback>
+              //   </Avatar>
+              // </NavLink>
               <NavLink href="/login" className="hover:text-primary transition">
                 <User />
               </NavLink>

@@ -4,27 +4,28 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu";
-import { LogOutIcon, CircleUserRound, LayoutDashboard } from "lucide-react";
+import {
+  LogOutIcon,
+  CircleUserRound,
+  LayoutDashboard,
+  ListOrdered,
+} from "lucide-react";
 import Link from "next/link";
 import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { useCartStore } from "@/store/cart";
-import { useFavStore } from "@/store/favorite";
 
 export default function NavDropdownMenu({ data }: any) {
   const router = useRouter();
   const setCartCount = useCartStore((state) => state.setCartCount);
-  const setFavCount = useFavStore((state) => state.setFavCount);
 
   const signOutHandler = async () => {
     const result = await signOut();
     if (result.data) {
       setCartCount(0);
-      setFavCount(0);
       router.replace("/login");
     } else {
       throw Error("error while signing out");
@@ -49,18 +50,17 @@ export default function NavDropdownMenu({ data }: any) {
           </DropdownMenuLabel>
           <DropdownMenuLabel>{data?.user.email}</DropdownMenuLabel>
           <DropdownMenuItem>
-            <Link
-              href="/dashboard/profile"
-              className="w-full flex justify-between">
-              Profile
-              <CircleUserRound />
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link href="/dashboard" className="w-full flex justify-between">
-              Dashboard
-              <LayoutDashboard />
-            </Link>
+            {data?.user?.role === "ADMIN" ? (
+              <Link href="/dashboard" className="w-full flex justify-between">
+                Dashboard
+                <LayoutDashboard />
+              </Link>
+            ) : (
+              <Link href="/orders" className="w-full flex justify-between">
+                Orders
+                <ListOrdered />
+              </Link>
+            )}
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={signOutHandler}

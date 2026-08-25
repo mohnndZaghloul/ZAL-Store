@@ -13,11 +13,7 @@ export const AddProduct = async (
   prevState: ProductActionState,
   FormData: FormData,
 ) => {
-  const user = {
-    id: "hGWHRKfTiZvnoCW3FGA9XmyaPQjh6k25",
-    name: "Mohannd Zaghloul",
-    role: "ADMIN",
-  };
+  const user = await getCurrentUser();
 
   const rawData = {
     title: (FormData.get("title") as string) || "",

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import SpecialButton from "../SpecialButton";
-import heroImage from "@/public/images/Ssum2640desk1726.webp";
+import heroImage from "@/public/images/Hero.webp";
 import AnimatedBox from "./AnimatedBox";
 import NavLink from "../layout/header/NavLink";
 

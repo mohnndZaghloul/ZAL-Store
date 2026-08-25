@@ -6,7 +6,7 @@ const useSearchProducts = (
   query: string,
   categoryId?: string,
   page: number = 1,
-  pageSize: number = 10,
+  pageSize: number = 100,
 ): UseQueryResult<FilterData_TP> => {
   return useQuery({
     queryKey: ["products", { query, categoryId }],

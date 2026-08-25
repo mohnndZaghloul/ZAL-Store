@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import img from "@/public/images/WhatsApp Image 2026-08-24 at 8.07.04 PM.webp";
 
 const SamplesSection = () => {
   return (
@@ -25,7 +26,10 @@ const SamplesSection = () => {
         <div className="group">
           <div className="relative aspect-square overflow-hidden">
             <Image
-              src="https://res.cloudinary.com/di7lyhf02/image/upload/q_auto/f_auto/v1782078136/poster3_bfwuyv.png"
+              src={
+                img ||
+                "https://res.cloudinary.com/di7lyhf02/image/upload/q_auto/f_auto/v1782078136/poster3_bfwuyv.png"
+              }
               alt="sample-1"
               fill
               className="object-cover group-hover:scale-105 transition duration-500"
