@@ -1,4 +1,4 @@
-import { OrderStatus, UserRole } from "@/generated/prisma/enums";
+import { OrderStatus, PaymentMethod, UserRole } from "@/generated/prisma/enums";
 
 export type Product_TP = {
   id: string;
@@ -37,6 +37,14 @@ export type OrderItem_TP = {
 export type Orders_TP = {
   id: string;
   userId: string | null;
+  customerName: string;
+  customerPhone: string;
+  address: string;
+  city: string;
+  shippingFee: number;
+  paymentMethod: PaymentMethod;
+  discountCodeId: string | null;
+  discountAmount: number;
   amount: number;
   currency: string;
   status: OrderStatus;
@@ -44,13 +52,8 @@ export type Orders_TP = {
   paymobTransactionId: string | null;
   createdAt: Date;
   updatedAt: Date;
-  address: string;
-  city: string;
-  customerName: string;
-  customerPhone: string;
   items: OrderItem_TP[];
 };
-
 export type FilterData_TP = {
   products: Product_TP[];
   total: number;
