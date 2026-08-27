@@ -19,6 +19,7 @@ export const AddProduct = async (
     title: (FormData.get("title") as string) || "",
     description: (FormData.get("description") as string) || "",
     price: (FormData.get("price") as string) || "",
+    discountPercent: (FormData.get("discountPercent") as string) || "",
     categories: (FormData.get("categories") as string) || "[]",
     variants: (FormData.get("variants") as string) || "[]",
     images: (FormData.get("images") as string) || "[]",
@@ -28,6 +29,7 @@ export const AddProduct = async (
     title: [],
     description: [],
     price: [],
+    discountPercent: [],
     variants: [],
     images: [],
     general: [],
@@ -55,8 +57,15 @@ export const AddProduct = async (
     };
   }
 
-  const { title, price, description, variants, images, categories } =
-    validated.data;
+  const {
+    title,
+    price,
+    discountPercent,
+    description,
+    variants,
+    images,
+    categories,
+  } = validated.data;
 
   try {
     if (meta.mode === "add-product") {
@@ -65,6 +74,7 @@ export const AddProduct = async (
           title,
           description,
           price,
+          discountPercent,
           images,
           createdById: user?.id,
           categories: {
@@ -107,6 +117,7 @@ export const AddProduct = async (
             title,
             description,
             price,
+            discountPercent,
             images,
             categories: { set: categories.map((id) => ({ id })) },
           },
@@ -260,12 +271,14 @@ export const getCurrentUserProducts = async () => {
     throw Error(`${error}`);
   }
 };
+
 export const getProductById = async (id: string) => {
   return await prisma.product.findUnique({
     where: { id },
     include: { categories: true, variants: true },
   });
 };
+
 export const deleteProduct = async (id: string) => {
   await prisma.product.delete({ where: { id } });
   revalidatePath("/dashboard/customers");

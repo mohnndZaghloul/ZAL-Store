@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getCartProducts } from "@/actions/cart-actions";
 import { CheckoutItem_TP } from "@/types";
+import { getEffectivePrice } from "./pricing";
 
 export type CheckoutData = {
   mode: "buy-now" | "cart";
@@ -8,13 +9,6 @@ export type CheckoutData = {
   subtotal: number;
 };
 
-/**
- * The single source of truth for what's actually being checked out.
- * variantId/quantity come from the URL (Buy Now) — treat them ONLY as a
- * lookup key. Every price, size, color, and stock number is re-read from
- * the database here, never taken from the query string or the client.
- * Returns null when there's nothing valid to check out.
- */
 export async function resolveCheckoutData(
   variantId?: string,
   quantityParam?: string,
@@ -34,7 +28,11 @@ export async function resolveCheckoutData(
     if (variant.stock < 1) return null;
 
     const quantity = Math.min(requestedQuantity, variant.stock);
-    const price = variant.product.price + variant.priceModifier;
+    const price =
+      getEffectivePrice(
+        variant.product.price,
+        variant.product.discountPercent,
+      ) + variant.priceModifier;
 
     return {
       mode: "buy-now",
@@ -68,7 +66,9 @@ export async function resolveCheckoutData(
       image: item.product!.images[0] ?? "",
       size: item.variant!.size,
       color: item.variant!.color,
-      price: item.product!.price + item.variant!.priceModifier,
+      price:
+        getEffectivePrice(item.product!.price, item.product!.discountPercent) +
+        item.variant!.priceModifier,
       quantity: Math.min(item.quantity, item.variant!.stock),
       stock: item.variant!.stock,
     }));

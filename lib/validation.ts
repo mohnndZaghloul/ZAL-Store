@@ -58,7 +58,7 @@ export const ProductSchema = z.object({
   price: z.coerce
     .number({ error: "Price must be a number" })
     .positive("Price must be greater than 0"),
-
+  discountPercent: z.coerce.number().min(0).max(100).nullable().optional(),
   categories: parseJsonField(
     z
       .array(z.string().min(1, "Category cannot be empty"))

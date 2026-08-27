@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {
   Sidebar,
   SidebarContent,
@@ -30,6 +29,7 @@ import Image from "next/image";
 import { useCartStore } from "@/store/cart";
 import SpecialButton from "../SpecialButton";
 import { useRouter } from "next/navigation";
+import { getEffectivePrice } from "@/lib/pricing";
 
 export default function SidebarCart() {
   const { setOpen, setOpenMobile, isMobile } = useSidebar();
@@ -65,10 +65,13 @@ export default function SidebarCart() {
     setCartCount(CartCount - quantity);
   };
 
-  // Same formula the checkout page uses (product price + variant price
+  // Same formula the checkout page uses (discounted price + variant price
   // modifier) — keeps the sidebar total consistent with what checkout shows.
   const unitPrice = (product: NonNullable<typeof data>[number]) =>
-    (product.product?.price ?? 0) + (product.variant?.priceModifier ?? 0);
+    getEffectivePrice(
+      product.product?.price ?? 0,
+      product.product?.discountPercent,
+    ) + (product.variant?.priceModifier ?? 0);
 
   const subtotal =
     data?.reduce((sum, item) => sum + unitPrice(item) * item.quantity, 0) ?? 0;

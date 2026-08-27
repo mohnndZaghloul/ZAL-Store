@@ -5,6 +5,7 @@ export type Product_TP = {
   title: string;
   description: string;
   price: number;
+  discountPercent: number | null;
   images: string[];
   tags: string[];
   createAt: Date;
@@ -92,6 +93,7 @@ export type ProductFormErrors = {
   title?: string[];
   description?: string[];
   price?: string[];
+  discountPercent?: string[];
   variants?: string[];
   categories?: string[];
   images?: string[];

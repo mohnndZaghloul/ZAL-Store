@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import CustomCarousel from "@/components/shop/CustomCarousel";
 import SimilarProducts from "@/components/shop/SimilarProducts";
 import AddToCartSection from "@/components/shop/AddToCartSection";
+import { getEffectivePrice, isOnSale } from "@/lib/pricing";
 
 type Props_TP = {
   params: Promise<{
@@ -70,9 +71,31 @@ export default async function ProductDetailsPage({ params }: Props_TP) {
               Zal Store for you
             </h3>
             <h2 className="text-2xl uppercase">{product?.title}</h2>
-            <span className="font-semibold">
-              EGP {product?.price.toFixed(2)}
-            </span>
+            <div className="flex items-center gap-3 mt-3">
+              {isOnSale(product.discountPercent) ? (
+                <>
+                  <span className="text-sm text-neutral line-through">
+                    EGP {product.price.toFixed(2)}
+                  </span>
+
+                  <span className="text-2xl font-semibold text-primary">
+                    EGP{" "}
+                    {getEffectivePrice(
+                      product.price,
+                      product.discountPercent,
+                    ).toFixed(2)}
+                  </span>
+
+                  <span className="bg-red-100 text-red-600 px-2 py-1 text-xs font-semibold">
+                    -{product.discountPercent}%
+                  </span>
+                </>
+              ) : (
+                <span className="text-2xl font-semibold text-primary">
+                  EGP {product.price.toFixed(2)}
+                </span>
+              )}
+            </div>
           </div>
           <AddToCartSection product={product} />
           <div className="py-4 space-y-4">

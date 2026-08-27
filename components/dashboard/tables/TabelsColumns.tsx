@@ -11,7 +11,8 @@ import Image from "next/image";
 import { Skeleton } from "../../ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import Link from "next/link";
-import { User_TP, Product_TP, Role_TP, Orders_TP } from "@/types/index";
+import { getEffectivePrice, isOnSale } from "@/lib/pricing";
+import { User_TP, Product_TP, Role_TP } from "@/types/index";
 import {
   Select,
   SelectContent,
@@ -226,9 +227,27 @@ export const ProductsColumns: ColumnDef<Product_TP>[] = [
   {
     accessorKey: "price",
     header: "Price",
-    cell: ({ row }) => (
-      <p className="text-primary font-semibold">{row.original.price} EGP</p>
-    ),
+    cell: ({ row }) => {
+      const { price, discountPercent } = row.original;
+
+      if (!isOnSale(discountPercent)) {
+        return <p className="text-primary font-semibold">{price} EGP</p>;
+      }
+
+      const effectivePrice = getEffectivePrice(price, discountPercent);
+
+      return (
+        <div className="flex items-center gap-2">
+          <span className="text-neutral line-through text-sm">{price} EGP</span>
+          <span className="text-primary font-semibold">
+            {effectivePrice} EGP
+          </span>
+          <span className="text-xs text-destructive font-medium">
+            -{discountPercent}%
+          </span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "size",
@@ -277,6 +296,13 @@ export const ProductsColumns: ColumnDef<Product_TP>[] = [
     cell: ({ row }) => {
       const date = row.getValue("createAt") as Date;
       return date.toLocaleDateString("en-US");
+    },
+  },
+  {
+    accessorKey: "discountPercent",
+    header: "Discount Percent",
+    cell: ({ row }) => {
+      return <p>{row.getValue("discountPercent")} %</p>;
     },
   },
   {

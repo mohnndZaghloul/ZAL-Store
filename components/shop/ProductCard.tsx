@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Product_TP } from "@/types";
+import { getEffectivePrice, isOnSale } from "@/lib/pricing";
 
 const ProductCard = ({ product }: { product: Product_TP }) => {
   return (
@@ -22,7 +23,31 @@ const ProductCard = ({ product }: { product: Product_TP }) => {
       </div>
       <div className="text-center my-2">
         <p className="text-sm uppercase">{product?.title}</p>
-        <span className="font-semibold">EGP {product?.price.toFixed(2)}</span>
+        <div className="flex items-center justify-center gap-2 mt-1">
+          {isOnSale(product.discountPercent) ? (
+            <>
+              <span className="text-xs text-neutral line-through">
+                EGP {product.price.toFixed(2)}
+              </span>
+
+              <span className="font-semibold">
+                EGP{" "}
+                {getEffectivePrice(
+                  product.price,
+                  product.discountPercent,
+                ).toFixed(2)}
+              </span>
+
+              <span className="text-[10px] font-semibold text-red-600">
+                -{product.discountPercent}%
+              </span>
+            </>
+          ) : (
+            <span className="font-semibold">
+              EGP {product.price.toFixed(2)}
+            </span>
+          )}
+        </div>
       </div>
     </Link>
   );

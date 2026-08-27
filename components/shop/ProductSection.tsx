@@ -25,7 +25,7 @@ const ProductSection = ({
   }
 
   return (
-    <section className="px-2 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <section className="px-2 md:my-8 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {filterData?.data?.products?.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

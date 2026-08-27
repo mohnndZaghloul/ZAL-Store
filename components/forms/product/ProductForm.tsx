@@ -27,6 +27,7 @@ const ProductForm = ({
     title: product?.title ?? "",
     description: product?.description ?? "",
     price: product?.price.toString() ?? "0",
+    discountPercent: product?.discountPercent?.toString() ?? "",
   });
   const [uploadingCount, setUploadingCount] = useState(0);
   const [imageUrls, setImageUrls] = useState<string[]>(product?.images ?? []);
@@ -79,6 +80,17 @@ const ProductForm = ({
               placeholder="0.00 EGP"
               value={formValues.price}
               error={state?.errors?.price?.[0]}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="space-y-2 my-4">
+            <FormFiled
+              id="discountPercent"
+              name="discountPercent"
+              type="number"
+              placeholder="e.g. 20 for 20% off — leave blank for no sale"
+              value={formValues.discountPercent}
+              error={state?.errors?.discountPercent?.[0]}
               onChange={handleChange}
             />
           </div>

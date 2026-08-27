@@ -32,20 +32,21 @@ model User {
 }
 
 model Product {
-  id          String           @id @default(uuid())
-  title       String
-  description String
-  price       Float
-  images      String[]
-  tags        String[]         @default([])
-  createAt    DateTime         @default(now())
-  UpdateAt    DateTime         @updatedAt
-  createdById String?
-  createdBy   User?            @relation("createdBy", fields: [createdById], references: [id])
-  categories  Category[]       @relation("CategoryToProduct")
-  favoritedBy UserFavorite[]
-  cartItems   CartItem[]
-  variants    ProductVariant[]
+  id              String           @id @default(uuid())
+  title           String
+  description     String
+  price           Float
+  discountPercent Float?           @default(0)
+  images          String[]
+  tags            String[]         @default([])
+  createAt        DateTime         @default(now())
+  UpdateAt        DateTime         @updatedAt
+  createdById     String?
+  createdBy       User?            @relation("createdBy", fields: [createdById], references: [id])
+  categories      Category[]       @relation("CategoryToProduct")
+  favoritedBy     UserFavorite[]
+  cartItems       CartItem[]
+  variants        ProductVariant[]
 
   @@index([createdById])
   @@index([price])
