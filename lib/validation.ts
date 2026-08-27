@@ -87,10 +87,10 @@ export const checkoutSchema = z.object({
   phone: z.string().min(10, "Enter a valid phone number"),
   address: z.string().min(10, "Address is too short"),
   city: z.enum(GOVERNORATE_VALUES, {
-    errorMap: () => ({ message: "Select your governorate" }),
+    error: "Select your governorate",
   }),
   paymentMethod: z.enum(["CASH", "INSTAPAY"], {
-    errorMap: () => ({ message: "Select a payment method" }),
+    error: "Select a payment method",
   }),
   discountCode: z.string().optional(),
 });
