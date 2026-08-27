@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import { useSession } from "@/lib/auth-client";
 import { SidebarTrigger } from "../../ui/sidebar";
 import { Button } from "../../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import NavDropdownMenu from "./NavDropdownMenu";
 
 export default function NavBar() {

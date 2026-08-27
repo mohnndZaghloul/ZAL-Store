@@ -17,9 +17,12 @@ import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { useCartStore } from "@/store/cart";
+import { useEffect, useState } from "react";
+import { getRole } from "@/actions/customers-actions";
 
 export default function NavDropdownMenu({ data }: any) {
   const router = useRouter();
+  const [isAdmin, setIsAdmin] = useState(false);
   const setCartCount = useCartStore((state) => state.setCartCount);
 
   const signOutHandler = async () => {
@@ -31,6 +34,15 @@ export default function NavDropdownMenu({ data }: any) {
       throw Error("error while signing out");
     }
   };
+
+  useEffect(() => {
+    async function getCurrentRole() {
+      const result = await getRole();
+      if (result === "ADMIN") setIsAdmin(true);
+    }
+    getCurrentRole();
+  }, [data?.user]);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -50,7 +62,7 @@ export default function NavDropdownMenu({ data }: any) {
           </DropdownMenuLabel>
           <DropdownMenuLabel>{data?.user.email}</DropdownMenuLabel>
           <DropdownMenuItem>
-            {data?.user?.role === "ADMIN" ? (
+            {isAdmin ? (
               <Link href="/dashboard" className="w-full flex justify-between">
                 Dashboard
                 <LayoutDashboard />
