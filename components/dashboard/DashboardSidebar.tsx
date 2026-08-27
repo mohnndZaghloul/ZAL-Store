@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Shirt } from "lucide-react";
 import { NavProjects } from "./nav-projects";
-import { sidebarLinks } from "./SidebarData";
+import { sidebarLinks, systemLinks } from "./SidebarData";
+import { NavMain } from "./nav-main";
 
 export function DashboardSidebar() {
   return (
@@ -35,6 +36,7 @@ export function DashboardSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <NavProjects projects={sidebarLinks} />
+        <NavMain items={systemLinks} />
       </SidebarContent>
     </Sidebar>
   );

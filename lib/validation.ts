@@ -1,4 +1,5 @@
 import z from "zod";
+import { GOVERNORATE_VALUES } from "./shipping";
 
 const productSizes = [
   "S",
@@ -85,7 +86,13 @@ export const checkoutSchema = z.object({
   name: z.string().min(3, "Name is too short"),
   phone: z.string().min(10, "Enter a valid phone number"),
   address: z.string().min(10, "Address is too short"),
-  city: z.string().min(2, "City is required"),
+  city: z.enum(GOVERNORATE_VALUES, {
+    errorMap: () => ({ message: "Select your governorate" }),
+  }),
+  paymentMethod: z.enum(["CASH", "INSTAPAY"], {
+    errorMap: () => ({ message: "Select a payment method" }),
+  }),
+  discountCode: z.string().optional(),
 });
 
 export type CheckoutFormValues = z.infer<typeof checkoutSchema>;

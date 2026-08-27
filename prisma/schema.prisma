@@ -68,21 +68,42 @@ model ProductVariant {
   @@map("product_variant")
 }
 
+model DiscountCode {
+  id             String       @id @default(uuid())
+  code           String       @unique
+  type           DiscountType @default(PERCENTAGE)
+  value          Float
+  maxUses        Int?
+  usedCount      Int          @default(0)
+  minOrderAmount Int?
+  expiresAt      DateTime?
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  orders         Order[]
+
+  @@map("discount_code")
+}
+
 model Order {
-  id                  String      @id @default(uuid())
+  id                  String        @id @default(uuid())
   userId              String?
-  user                User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
   customerName        String
   customerPhone       String
   address             String
   city                String
+  shippingFee         Int           @default(0)
+  paymentMethod       PaymentMethod @default(CASH)
+  discountCodeId      String?
+  discountCode        DiscountCode? @relation(fields: [discountCodeId], references: [id])
+  discountAmount      Int           @default(0)
   amount              Int
-  currency            String      @default("EGP")
-  status              OrderStatus @default(PENDING)
-  paymobOrderId       String?     @unique
-  paymobTransactionId String?     @unique
-  createdAt           DateTime    @default(now())
-  updatedAt           DateTime    @updatedAt
+  currency            String        @default("EGP")
+  status              OrderStatus   @default(PENDING)
+  paymobOrderId       String?       @unique
+  paymobTransactionId String?       @unique
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
   items               OrderItem[]
 
   @@index([userId])
@@ -205,4 +226,14 @@ enum OrderStatus {
   SHIPPED
   DELIVERED
   CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  INSTAPAY
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
 }

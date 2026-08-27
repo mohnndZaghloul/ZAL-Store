@@ -1,11 +1,15 @@
 import { routes } from "@/lib/centralized-routes";
 import {
+  BookOpen,
+  Bot,
   BoxIcon,
   CircleUserRound,
   LayoutDashboard,
   ListOrderedIcon,
   MonitorCog,
+  Settings2,
   Shirt,
+  SquareTerminal,
   User2,
 } from "lucide-react";
 import { JSX } from "react";
@@ -50,10 +54,22 @@ export const sidebarLinks: SidebarLink[] = [
   //   icon: <User2 />,
   //   roles: ["ADMIN"],
   // },
+];
+
+export const systemLinks = [
   {
-    label: "System",
-    url: routes.system,
-    icon: <MonitorCog />,
-    roles: ["ADMIN"],
+    title: "Settings",
+    url: "#",
+    icon: Settings2,
+    items: [
+      {
+        title: "Categories",
+        url: "/dashboard/system/categories",
+      },
+      {
+        title: "Discount",
+        url: "/dashboard/system/discount",
+      },
+    ],
   },
 ];
