@@ -67,12 +67,13 @@ export default function NavDropdownMenu({ data }: any) {
                 Dashboard
                 <LayoutDashboard />
               </Link>
-            ) : (
-              <Link href="/orders" className="w-full flex justify-between">
-                Orders
-                <ListOrdered />
-              </Link>
-            )}
+            ) : null}
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/orders" className="w-full flex justify-between">
+              Orders
+              <ListOrdered />
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={signOutHandler}

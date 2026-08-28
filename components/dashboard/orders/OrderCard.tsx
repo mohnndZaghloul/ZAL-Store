@@ -47,7 +47,7 @@ export default function OrderCard({ order }: { order: OrderWithItems }) {
 
   return (
     <div className="border flex flex-col">
-      <div className="flex justify-between items-center text-primary-foreground p-4 border-b bg-linear-180 from-primary to-primary/80">
+      <div className="flex justify-between items-center p-4 border-b bg-linear-30 from-secondary/70 to-secondary/50">
         <div>
           <p className="font-medium">Order ID : #{order.id.slice(0, 8)}</p>
           <p className="text-xs">

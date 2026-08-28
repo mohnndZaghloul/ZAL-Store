@@ -135,7 +135,7 @@ export async function createOrder(
     return { message: "Something went wrong placing your order." };
   }
 
-  redirect(`/orders/${orderId}/confirmation`);
+  redirect(`/orders/${orderId}`);
 }
 const orderWithItems = {
   include: {
@@ -178,4 +178,36 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus) {
       message: "Failed to update order status.",
     };
   }
+}
+
+// Customer-facing — only ever returns orders belonging to the current
+// session. Guest orders (userId is null) intentionally can't show up
+// here, since there's no account to list them under.
+export async function getUserOrders(): Promise<OrderWithItems[]> {
+  const user = await getCurrentUser();
+  if (!user) return [];
+
+  return prisma.order.findMany({
+    where: { userId: user.id },
+    include: orderWithItems.include,
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getUserOrderById(
+  orderId: string,
+): Promise<OrderWithItems | null> {
+  const user = await getCurrentUser();
+  if (!user) return null;
+
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: orderWithItems.include,
+  });
+
+  // Ownership check — the id alone isn't proof of access. Without this,
+  // anyone could view any order by guessing/incrementing an id in the URL.
+  if (!order || order.userId !== user.id) return null;
+
+  return order;
 }
