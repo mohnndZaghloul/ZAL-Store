@@ -91,6 +91,7 @@ model Order {
   user                User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
   customerName        String
   customerPhone       String
+  customerEmail       String?
   address             String
   city                String
   shippingFee         Int           @default(0)

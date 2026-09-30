@@ -1,7 +1,6 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/actions/customers-actions";
 import { checkoutSchema } from "@/lib/validation";
 import { resolveCheckoutData } from "@/lib/checkout";
@@ -9,10 +8,16 @@ import { OrderStatus, Prisma } from "@/generated/prisma/client";
 import { revalidatePath } from "next/cache";
 import { getShippingFee } from "@/lib/shipping";
 import { validateDiscountCode } from "./discount-action";
+import {
+  sendOrderConfirmationEmail,
+  sendOrderShippedEmail,
+} from "@/lib/email";
 
 export type OrderActionState = {
   errors?: Record<string, string[]>;
   message?: string;
+  success?: boolean;
+  orderId?: string;
 };
 
 export async function createOrder(
@@ -20,10 +25,11 @@ export async function createOrder(
   quantity: string | undefined,
   formData: FormData,
 ): Promise<OrderActionState> {
-  const user = await getCurrentUser(); // may be null — guest checkout is allowed
+  const user = await getCurrentUser(); 
 
   const parsed = checkoutSchema.safeParse({
     name: formData.get("name"),
+    email: formData.get("email"),
     phone: formData.get("phone"),
     address: formData.get("address"),
     city: formData.get("city"),
@@ -35,8 +41,6 @@ export async function createOrder(
     return { errors: parsed.error.flatten().fieldErrors };
   }
 
-  // Re-resolve from scratch at submit time — price/stock shown on the page
-  // a minute ago may no longer be accurate.
   const checkoutData = await resolveCheckoutData(variantId, quantity);
   if (!checkoutData) {
     return { message: "One or more items are no longer available." };
@@ -72,6 +76,7 @@ export async function createOrder(
           discountAmount,
           currency: "EGP",
           customerName: parsed.data.name,
+          customerEmail: parsed.data.email,
           customerPhone: parsed.data.phone,
           address: parsed.data.address,
           city: parsed.data.city,
@@ -86,9 +91,6 @@ export async function createOrder(
       });
 
       for (const item of checkoutData.items) {
-        // Atomic check-and-decrement: only succeeds if stock is still
-        // enough right now. Guards against a race with another order
-        // placed between page load and this transaction.
         const updated = await tx.productVariant.updateMany({
           where: { id: item.variantId, stock: { gte: item.quantity } },
           data: { stock: { decrement: item.quantity } },
@@ -131,11 +133,31 @@ export async function createOrder(
     if (msg === "DISCOUNT_LIMIT_REACHED") {
       return { message: "This discount code just reached its usage limit." };
     }
-    console.error("createOrder failed:", err); // <- check your terminal for this
+    console.error("createOrder failed:", err); 
     return { message: "Something went wrong placing your order." };
   }
 
-  redirect(`/orders/${orderId}`);
+  await sendOrderConfirmationEmail({
+    email: parsed.data.email,
+    customerName: parsed.data.name,
+    orderId,
+    subtotal: checkoutData.subtotal,
+    shippingFee,
+    discountAmount,
+    address: parsed.data.address,
+    city: parsed.data.city,
+    phone: parsed.data.phone,
+    paymentMethod: parsed.data.paymentMethod,
+    amount:
+      Math.round(checkoutData.subtotal) +
+      shippingFee -
+      discountAmount,
+  });
+
+  return {
+    success: true,
+    orderId,
+  };
 }
 const orderWithItems = {
   include: {
@@ -165,14 +187,25 @@ export async function getAllOrders(): Promise<OrderWithItems[]> {
 
 export async function updateOrderStatus(orderId: string, status: OrderStatus) {
   try {
-    await prisma.order.update({
+    const order = await prisma.order.update({
       where: { id: orderId },
       data: { status },
     });
-    revalidatePath("/dashboard/orders"); // adjust to your actual orders page route
+    
+    if (status === OrderStatus.SHIPPED && order.customerEmail) {
+      await sendOrderShippedEmail({
+        email: order.customerEmail,
+        customerName: order.customerName,
+        orderId: order.id,
+      });
+    }
+
+    revalidatePath("/dashboard/orders");
+
     return { success: true as const };
   } catch (error) {
     console.error("updateOrderStatus failed:", error);
+
     return {
       success: false as const,
       message: "Failed to update order status.",
@@ -180,9 +213,6 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus) {
   }
 }
 
-// Customer-facing — only ever returns orders belonging to the current
-// session. Guest orders (userId is null) intentionally can't show up
-// here, since there's no account to list them under.
 export async function getUserOrders(): Promise<OrderWithItems[]> {
   const user = await getCurrentUser();
   if (!user) return [];
@@ -205,8 +235,7 @@ export async function getUserOrderById(
     include: orderWithItems.include,
   });
 
-  // Ownership check — the id alone isn't proof of access. Without this,
-  // anyone could view any order by guessing/incrementing an id in the URL.
+
   if (!order || order.userId !== user.id) return null;
 
   return order;

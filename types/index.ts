@@ -39,6 +39,7 @@ export type Orders_TP = {
   id: string;
   userId: string | null;
   customerName: string;
+  customerEmail: string | null;
   customerPhone: string;
   address: string;
   city: string;

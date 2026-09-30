@@ -84,6 +84,7 @@ export type ProductFormData = z.output<typeof ProductSchema>;
 
 export const checkoutSchema = z.object({
   name: z.string().min(3, "Name is too short"),
+  email: z.string().email("Enter a valid email"),
   phone: z.string().min(10, "Enter a valid phone number"),
   address: z.string().min(10, "Address is too short"),
   city: z.enum(GOVERNORATE_VALUES, {
