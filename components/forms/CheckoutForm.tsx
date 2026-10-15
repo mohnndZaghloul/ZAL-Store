@@ -24,6 +24,7 @@ import {
   DiscountValidation,
   validateDiscountCode,
 } from "@/actions/discount-action";
+import { useRef } from "react";
 
 export default function CheckoutForm({
   variantId,
@@ -41,6 +42,8 @@ export default function CheckoutForm({
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string | null>(null);
   const [successOrderId, setSuccessOrderId] = useState<string | null>(null);
+  const checkoutIdRef = useRef<string | null>(null);
+const checkoutStartedRef = useRef(false);
 
   const [isApplyingDiscount, startDiscountTransition] = useTransition();
   const [discountResult, setDiscountResult] =
@@ -71,39 +74,72 @@ export default function CheckoutForm({
     });
   };
 
-  const onSubmit = (values: CheckoutFormValues) => {
-    setServerError(null);
 
-    const formData = new FormData();
+const onSubmit = (values: CheckoutFormValues) => {
+  setServerError(null);
 
-    formData.append("name", values.name);
-    formData.append("email", values.email);
-    formData.append("phone", values.phone);
-    formData.append("address", values.address);
-    formData.append("city", values.city);
-    formData.append("paymentMethod", values.paymentMethod);
+  const formData = new FormData();
 
-    if (values.discountCode) {
-      formData.append("discountCode", values.discountCode);
+  formData.append("name", values.name);
+  formData.append("email", values.email);
+  formData.append("phone", values.phone);
+  formData.append("address", values.address);
+  formData.append("city", values.city);
+  formData.append("paymentMethod", values.paymentMethod);
+
+  if (values.discountCode) {
+    formData.append("discountCode", values.discountCode);
+  }
+
+  if (!checkoutIdRef.current) {
+    checkoutIdRef.current = crypto.randomUUID();
+  }
+
+  const checkoutId = checkoutIdRef.current;
+  formData.append("checkoutId", checkoutId);
+
+  startTransition(async () => {
+    if (!checkoutStartedRef.current) {
+      try {
+        const response = await fetch("/api/analytics", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "same-origin",
+          body: JSON.stringify({
+            eventType: "CHECKOUT_STARTED",
+            checkoutId,
+            path: window.location.pathname,
+          }),
+        });
+
+        if (response.ok) {
+          checkoutStartedRef.current = true;
+        } else {
+          console.error("Could not track checkout start");
+        }
+      } catch (error) {
+        console.error("Could not track checkout start:", error);
+      }
     }
 
-    startTransition(async () => {
-      const result = await createOrder(
-        variantId,
-        quantity,
-        formData
-      );
+    const result = await createOrder(
+      variantId,
+      quantity,
+      formData,
+    );
 
-      if (result?.success && result.orderId) {
-        setSuccessOrderId(result.orderId);
-        return;
-      }
+    if (result?.success && result.orderId) {
+      setSuccessOrderId(result.orderId);
+      return;
+    }
 
-      if (result?.message) {
-        setServerError(result.message);
-      }
-    });
-  };
+    if (result?.message) {
+      setServerError(result.message);
+    }
+  });
+};
 
   return (
     <form

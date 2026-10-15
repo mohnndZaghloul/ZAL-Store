@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Bodoni_Moda, Montserrat } from "next/font/google";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { cn } from "@/lib/utils";
 
 import AllProviders from "@/components/layout/AllProviders";
@@ -10,6 +11,7 @@ import Footer from "@/components/layout/footer/Footer";
 import { SidebarInset } from "@/components/ui/sidebar";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import PageViewTracker from "@/components/analytics/PageViewTracker";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -43,14 +45,20 @@ export default function RootLayout({
         montserrat.variable,
         bodoniModa.variable,
         "font-sans",
-      )}>
+      )}
+    >
       <body>
         <AllProviders>
+          <Suspense fallback={null}>
+            <PageViewTracker />
+          </Suspense>
+
           <SidebarInset>
             <NavBar />
             {children}
             <Footer />
           </SidebarInset>
+
           <SidebarCart />
           <ReactQueryDevtools />
         </AllProviders>

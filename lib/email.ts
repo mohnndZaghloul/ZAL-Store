@@ -73,7 +73,7 @@ export async function sendOrderConfirmationEmail({
           font-family: Arial, Helvetica, sans-serif;
           color: #222;
         ">
-  
+
           <div style="
             max-width: 620px;
             margin: 0 auto;
@@ -82,7 +82,7 @@ export async function sendOrderConfirmationEmail({
             overflow: hidden;
             border: 1px solid #e5e5e5;
           ">
-  
+
             <!-- Header -->
             <div style="
               padding: 28px 30px;
@@ -98,10 +98,10 @@ export async function sendOrderConfirmationEmail({
                 ZAL Store
               </h1>
             </div>
-  
+
             <!-- Main Content -->
             <div style="padding: 35px 30px;">
-  
+
               <h2 style="
                 margin: 0 0 18px;
                 font-size: 24px;
@@ -109,7 +109,7 @@ export async function sendOrderConfirmationEmail({
               ">
                 Your order has been confirmed! 🎉
               </h2>
-  
+
               <p style="
                 margin: 0 0 18px;
                 font-size: 16px;
@@ -117,7 +117,7 @@ export async function sendOrderConfirmationEmail({
               ">
                 Hi ${customerName},
               </p>
-  
+
               <p style="
                 margin: 0 0 25px;
                 font-size: 15px;
@@ -127,7 +127,7 @@ export async function sendOrderConfirmationEmail({
                 Great choice! We're excited to get your order ready.
                 Your order has been successfully placed and is now being processed.
               </p>
-  
+
               <!-- Order Information -->
               <div style="
                 background-color: #f7f7f7;
@@ -135,7 +135,7 @@ export async function sendOrderConfirmationEmail({
                 padding: 20px;
                 margin-bottom: 25px;
               ">
-  
+
                 <p style="
                   margin: 0 0 10px;
                   font-size: 13px;
@@ -144,7 +144,7 @@ export async function sendOrderConfirmationEmail({
                 ">
                   ORDER NUMBER
                 </p>
-  
+
                 <p style="
                   margin: 0 0 18px;
                   font-size: 18px;
@@ -153,13 +153,13 @@ export async function sendOrderConfirmationEmail({
                 ">
                   #${orderId.slice(0, 8)}
                 </p>
-  
+
                 <div style="
                   height: 1px;
                   background-color: #dddddd;
                   margin-bottom: 18px;
                 "></div>
-  
+
                 <p style="
                   margin: 0 0 7px;
                   font-size: 13px;
@@ -167,7 +167,7 @@ export async function sendOrderConfirmationEmail({
                 ">
                   ORDER TOTAL
                 </p>
-  
+
                 <p style="
                   margin: 0;
                   font-size: 22px;
@@ -176,14 +176,14 @@ export async function sendOrderConfirmationEmail({
                 ">
                   EGP ${amount.toFixed(2)}
                 </p>
-  
+
               </div>
-  
+
               <!-- Payment Summary -->
               <div style="
                 margin-bottom: 28px;
               ">
-  
+
                 <h3 style="
                   margin: 0 0 15px;
                   font-size: 16px;
@@ -191,7 +191,7 @@ export async function sendOrderConfirmationEmail({
                 ">
                   Order Summary
                 </h3>
-  
+
                 <table style="
                   width: 100%;
                   border-collapse: collapse;
@@ -204,7 +204,7 @@ export async function sendOrderConfirmationEmail({
                     ">
                       Subtotal
                     </td>
-  
+
                     <td style="
                       padding: 7px 0;
                       text-align: right;
@@ -213,7 +213,7 @@ export async function sendOrderConfirmationEmail({
                       EGP ${subtotal.toFixed(2)}
                     </td>
                   </tr>
-  
+
                   <tr>
                     <td style="
                       padding: 7px 0;
@@ -221,7 +221,7 @@ export async function sendOrderConfirmationEmail({
                     ">
                       Shipping
                     </td>
-  
+
                     <td style="
                       padding: 7px 0;
                       text-align: right;
@@ -230,7 +230,7 @@ export async function sendOrderConfirmationEmail({
                       EGP ${shippingFee.toFixed(2)}
                     </td>
                   </tr>
-  
+
                   ${
                     discountAmount > 0
                       ? `
@@ -241,7 +241,7 @@ export async function sendOrderConfirmationEmail({
                           ">
                             Discount
                           </td>
-  
+
                           <td style="
                             padding: 7px 0;
                             text-align: right;
@@ -253,14 +253,14 @@ export async function sendOrderConfirmationEmail({
                       `
                       : ""
                   }
-  
+
                   <tr>
                     <td colspan="2" style="
                       padding-top: 12px;
                       border-top: 1px solid #dddddd;
                     "></td>
                   </tr>
-  
+
                   <tr>
                     <td style="
                       padding: 5px 0;
@@ -269,7 +269,7 @@ export async function sendOrderConfirmationEmail({
                     ">
                       Total
                     </td>
-  
+
                     <td style="
                       padding: 5px 0;
                       text-align: right;
@@ -281,9 +281,9 @@ export async function sendOrderConfirmationEmail({
                     </td>
                   </tr>
                 </table>
-  
+
               </div>
-  
+
               <!-- Delivery Information -->
               <div style="
                 background-color: #fafafa;
@@ -292,7 +292,7 @@ export async function sendOrderConfirmationEmail({
                 padding: 20px;
                 margin-bottom: 28px;
               ">
-  
+
                 <h3 style="
                   margin: 0 0 15px;
                   font-size: 16px;
@@ -300,7 +300,7 @@ export async function sendOrderConfirmationEmail({
                 ">
                   Delivery Information
                 </h3>
-  
+
                 <p style="
                   margin: 0 0 8px;
                   font-size: 14px;
@@ -310,7 +310,7 @@ export async function sendOrderConfirmationEmail({
                   <strong style="color: #111111;">Name:</strong>
                   ${customerName}
                 </p>
-  
+
                 <p style="
                   margin: 0 0 8px;
                   font-size: 14px;
@@ -320,7 +320,7 @@ export async function sendOrderConfirmationEmail({
                   <strong style="color: #111111;">Phone:</strong>
                   ${phone}
                 </p>
-  
+
                 <p style="
                   margin: 0 0 8px;
                   font-size: 14px;
@@ -330,7 +330,7 @@ export async function sendOrderConfirmationEmail({
                   <strong style="color: #111111;">Address:</strong>
                   ${address}
                 </p>
-  
+
                 <p style="
                   margin: 0;
                   font-size: 14px;
@@ -340,14 +340,14 @@ export async function sendOrderConfirmationEmail({
                   <strong style="color: #111111;">Governorate:</strong>
                   ${city}
                 </p>
-  
+
               </div>
-  
+
               <!-- Payment Method -->
               <div style="
                 margin-bottom: 28px;
               ">
-  
+
                 <p style="
                   margin: 0 0 6px;
                   font-size: 13px;
@@ -356,7 +356,7 @@ export async function sendOrderConfirmationEmail({
                 ">
                   PAYMENT METHOD
                 </p>
-  
+
                 <p style="
                   margin: 0;
                   font-size: 15px;
@@ -365,16 +365,16 @@ export async function sendOrderConfirmationEmail({
                 ">
                   ${paymentMethod === "CASH" ? "Cash on Delivery" : "InstaPay"}
                 </p>
-  
+
               </div>
-  
+
               <!-- Status -->
               <div style="
                 border-left: 4px solid #111111;
                 padding: 5px 0 5px 15px;
                 margin-bottom: 28px;
               ">
-  
+
                 <p style="
                   margin: 0 0 5px;
                   font-size: 15px;
@@ -383,7 +383,7 @@ export async function sendOrderConfirmationEmail({
                 ">
                   What's next?
                 </p>
-  
+
                 <p style="
                   margin: 0;
                   font-size: 14px;
@@ -393,9 +393,9 @@ export async function sendOrderConfirmationEmail({
                   We'll send you another email as soon as your order is shipped
                   and on its way to you.
                 </p>
-  
+
               </div>
-  
+
               <!-- Button -->
               <div style="
                 text-align: center;
@@ -417,18 +417,18 @@ export async function sendOrderConfirmationEmail({
                   View Order Details
                 </a>
               </div>
-  
+
               <p style="
                 margin: 0;
                 font-size: 14px;
                 line-height: 1.7;
                 color: #777777;
               ">
-                Thank you for shopping with ZAL Store 
+                Thank you for shopping with ZAL Store
               </p>
-  
+
             </div>
-  
+
             <!-- Footer -->
             <div style="
               padding: 22px 30px;
@@ -436,7 +436,7 @@ export async function sendOrderConfirmationEmail({
               border-top: 1px solid #eeeeee;
               text-align: center;
             ">
-  
+
               <p style="
                 margin: 0;
                 font-size: 12px;
@@ -445,7 +445,7 @@ export async function sendOrderConfirmationEmail({
               ">
                 This is an automated email. Please do not reply to this message.
               </p>
-  
+
               <p style="
                 margin: 8px 0 0;
                 font-size: 12px;
@@ -453,11 +453,11 @@ export async function sendOrderConfirmationEmail({
               ">
                 © ZAL Store
               </p>
-  
+
             </div>
-  
+
           </div>
-  
+
         </div>
       `,
     });
@@ -619,7 +619,7 @@ export async function sendOrderShippedEmail({
               line-height: 1.7;
               color: #777777;
             ">
-              Thank you for shopping with ZAL Store 
+              Thank you for shopping with ZAL Store
             </p>
 
           </div>
@@ -656,3 +656,79 @@ export async function sendOrderShippedEmail({
   });
 }
 
+export async function sendAdminNewOrderEmail({
+    orderId,
+    customerName,
+    customerEmail,
+    amount,
+    paymentMethod,
+  }: {
+    orderId: string;
+    customerName: string;
+    customerEmail: string;
+    amount: number;
+    paymentMethod: string;
+  }) {
+    const adminEmail = process.env.GMAIL_USER;
+
+    if (!adminEmail) {
+      console.error("GMAIL_USER is not configured");
+      return { success: false };
+    }
+
+    return sendEmail({
+      to: adminEmail,
+      subject: `New Order Received - #${orderId.slice(0, 8)}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #222;">
+          <h2>New Order Received! 🎉</h2>
+          <p>A new order has been placed on ZAL Store.</p>
+
+          <div style="background: #f5f5f5; padding: 20px; border-radius: 8px;">
+            <p><strong>Order Number:</strong> #${orderId.slice(0, 8)}</p>
+            <p><strong>Customer:</strong> ${escapeHtml(customerName)}</p>
+            <p><strong>Customer Email:</strong> ${escapeHtml(customerEmail)}</p>
+            <p><strong>Order Total:</strong> EGP ${amount.toFixed(2)}</p>
+            <p><strong>Payment Method:</strong> ${paymentMethod === "CASH" ? "Cash on Delivery" : "InstaPay"}</p>
+          </div>
+
+          <p style="margin: 20px 0; line-height: 1.6;">
+          A new order is waiting for your review.
+          Order ID: #${orderId.slice(0, 8)}
+        </p>
+
+        <div style="text-align: center; margin: 28px 0;">
+          <a
+            href="${(process.env.NEXT_PUBLIC_URL || "http://localhost:3000").replace(/\/+$/, "")}/dashboard/orders"
+            style="
+              display: inline-block;
+              padding: 14px 28px;
+              background-color: #111111;
+              color: #ffffff;
+              text-decoration: none;
+              border-radius: 6px;
+              font-size: 14px;
+              font-weight: bold;
+            "
+          >
+            View Orders in Dashboard
+          </a>
+        </div>
+                </div>
+      `,
+    });
+  }
+
+  function escapeHtml(value: string): string {
+    return value.replace(/[&<>"']/g, (char) => {
+      const entities: Record<string, string> = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      };
+
+      return entities[char];
+    });
+  }

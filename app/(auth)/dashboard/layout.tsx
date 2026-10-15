@@ -22,9 +22,13 @@ export default async function DashboardLayout({
     redirect("/");
   }
 
+
+  const isSuperAdmin =
+    user.email?.toLowerCase() === "zaaaal.eg@gmail.com";
+
   return (
     <SidebarProvider>
-      <DashboardSidebar />
+      <DashboardSidebar isSuperAdmin={isSuperAdmin} />
       <SidebarInset>
         <SidebarTrigger
           size="icon-lg"

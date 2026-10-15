@@ -7,25 +7,65 @@ import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/auth";
 import { forbidden, unauthorized } from "next/navigation";
 import { Role_TP } from "@/types/index";
+const SUPER_ADMIN_EMAIL = "zaaaal.eg@gmail.com";
+
+const isSuperAdmin = async () => {
+  const session = await getSession();
+
+  if (!session?.user?.id || !session.user.email) {
+    return false;
+  }
+
+  return (
+    session.user.email.toLowerCase() ===
+    SUPER_ADMIN_EMAIL.toLowerCase()
+  );
+};
+
 
 export const getRole = async () => {
-  const data = await getSession();
+  const session = await getSession();
+
+  if (!session?.user?.id) {
+    return null;
+  }
+
   const user = await prisma.user.findUnique({
-    where: { id: data?.user.id },
+    where: { id: session.user.id },
+    select: { role: true },
   });
-  return user?.role;
+
+  return user?.role ?? null;
 };
 
 export const setRole = async (id: string, role: Role_TP) => {
-  const result = await getRole();
-  if (result !== Role_TP.ADMIN) {
+  if (!(await isSuperAdmin())) {
     forbidden();
   }
+
+  const targetUser = await prisma.user.findUnique({
+    where: { id },
+    select: { email: true },
+  });
+
+  if (!targetUser) {
+    throw new Error("User not found.");
+  }
+
+  if (
+    targetUser.email.toLowerCase() ===
+    SUPER_ADMIN_EMAIL.toLowerCase()
+  ) {
+    forbidden();
+  }
+
   await prisma.user.update({
     where: { id },
-    data: { role: role },
+    data: { role },
   });
+
   revalidatePath("/dashboard");
+  revalidatePath("/dashboard/customers");
 };
 
 export const getCurrentUser = async () => {
@@ -34,37 +74,68 @@ export const getCurrentUser = async () => {
   return await prisma.user.findUnique({ where: { id: session?.user.id } });
 };
 
+
 export const getAllUsers = async () => {
-  return await prisma.user.findMany({ orderBy: { name: "asc" } });
+  if (!(await isSuperAdmin())) {
+    forbidden();
+  }
+
+  return await prisma.user.findMany({
+    orderBy: { name: "asc" },
+  });
 };
 
 export const deleteCustomer = async (id: string) => {
-  const session = await getSession();
-  const role = await getRole();
-  if (role !== Role_TP.ADMIN) {
+  if (!(await isSuperAdmin())) {
     forbidden();
   }
-  const isSelf = session?.user.id === id;
 
-  if (isSelf && session?.session.token) {
-    await auth.api.revokeSession({
-      headers: await headers(),
-      body: { token: session.session.token },
-    });
+  const targetUser = await prisma.user.findUnique({
+    where: { id },
+    select: { email: true },
+  });
+
+  if (!targetUser) {
+    throw new Error("User not found.");
   }
 
-  await prisma.user.delete({ where: { id } });
+  if (
+    targetUser.email.toLowerCase() ===
+    SUPER_ADMIN_EMAIL.toLowerCase()
+  ) {
+    forbidden();
+  }
+
+  await prisma.user.delete({
+    where: { id },
+  });
+
   revalidatePath("/dashboard/customers");
 
-  return { isSelf };
+  return { isSelf: false };
 };
 
 export const updateCustomer = async (
   id: string,
   data: { name: string; email: string; password: string },
 ) => {
-  const role = await getRole();
-  if (role !== Role_TP.ADMIN) {
+  if (!(await isSuperAdmin())) {
+    forbidden();
+  }
+
+  const targetUser = await prisma.user.findUnique({
+    where: { id },
+    select: { email: true },
+  });
+
+  if (!targetUser) {
+    throw new Error("User not found.");
+  }
+
+  if (
+    targetUser.email.toLowerCase() ===
+    SUPER_ADMIN_EMAIL.toLowerCase()
+  ) {
     forbidden();
   }
 
@@ -81,6 +152,7 @@ export const updateCustomer = async (
       headers: await headers(),
     });
   }
+
   revalidatePath("/dashboard/customers");
 };
 

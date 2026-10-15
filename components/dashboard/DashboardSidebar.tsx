@@ -14,7 +14,11 @@ import { NavProjects } from "./nav-projects";
 import { sidebarLinks, systemLinks } from "./SidebarData";
 import { NavMain } from "./nav-main";
 
-export function DashboardSidebar() {
+export function DashboardSidebar({
+  isSuperAdmin,
+}: {
+  isSuperAdmin: boolean;
+}) {
   return (
     <Sidebar collapsible="icon" className="z-50">
       <SidebarHeader>
@@ -35,8 +39,10 @@ export function DashboardSidebar() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={sidebarLinks} />
-        <NavMain items={systemLinks} />
+      <NavProjects
+  projects={sidebarLinks}
+  isSuperAdmin={isSuperAdmin}
+/>        <NavMain items={systemLinks} />
       </SidebarContent>
     </Sidebar>
   );

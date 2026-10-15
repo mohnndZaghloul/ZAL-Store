@@ -239,3 +239,18 @@ enum DiscountType {
   PERCENTAGE
   FIXED
 }
+
+model AnalyticsEvent {
+  id         String   @id @default(cuid())
+  visitorId  String
+  eventType  String
+  path       String?
+  orderId    String?
+  checkoutId String?
+  createdAt  DateTime @default(now())
+
+  @@index([eventType, createdAt])
+  @@index([visitorId, createdAt])
+  @@index([checkoutId])
+  @@index([orderId])
+}

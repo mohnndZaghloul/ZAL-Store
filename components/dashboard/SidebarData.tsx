@@ -21,6 +21,7 @@ type SidebarLink = {
   url: string;
   icon?: JSX.Element;
   roles: Role[];
+  superAdminOnly?: boolean;
 };
 
 export const sidebarLinks: SidebarLink[] = [
@@ -48,12 +49,14 @@ export const sidebarLinks: SidebarLink[] = [
     icon: <BoxIcon />,
     roles: ["ADMIN"],
   },
-  // {
-  //   label: "Customers",
-  //   url: routes.customers,
-  //   icon: <User2 />,
-  //   roles: ["ADMIN"],
-  // },
+
+  {
+    label: "Customers",
+    url: "/dashboard/customers",
+    icon: <User2 />,
+    roles: ["ADMIN"],
+    superAdminOnly: true,
+  },
 ];
 
 export const systemLinks = [
