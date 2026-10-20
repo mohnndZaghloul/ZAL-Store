@@ -1,5 +1,21 @@
 import nodemailer from "nodemailer";
 
+const PRODUCTION_URL = "https://zal-store.vercel.app";
+
+function getSiteUrl() {
+  const configuredUrl = process.env.NEXT_PUBLIC_URL?.trim();
+
+  if (process.env.NODE_ENV === "production") {
+    if (configuredUrl?.startsWith("https://")) {
+      return configuredUrl.replace(/\/+$/, "");
+    }
+
+    return PRODUCTION_URL;
+  }
+
+  return (configuredUrl || "http://localhost:3000").replace(/\/+$/, "");
+}
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -402,7 +418,7 @@ export async function sendOrderConfirmationEmail({
                 margin: 30px 0;
               ">
                 <a
-                  href="${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/orders/${orderId}"
+                href="${getSiteUrl()}/orders/${orderId}"
                   style="
                     display: inline-block;
                     padding: 14px 28px;
@@ -597,7 +613,7 @@ export async function sendOrderShippedEmail({
               margin: 30px 0;
             ">
               <a
-                href="${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/orders/${orderId}"
+              href="${getSiteUrl()}/orders/${orderId}"
                 style="
                   display: inline-block;
                   padding: 14px 28px;
@@ -699,7 +715,7 @@ export async function sendAdminNewOrderEmail({
 
         <div style="text-align: center; margin: 28px 0;">
           <a
-            href="${(process.env.NEXT_PUBLIC_URL || "http://localhost:3000").replace(/\/+$/, "")}/dashboard/orders"
+          href="${getSiteUrl()}/dashboard/orders"
             style="
               display: inline-block;
               padding: 14px 28px;
