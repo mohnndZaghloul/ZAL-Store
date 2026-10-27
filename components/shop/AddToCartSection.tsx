@@ -54,7 +54,7 @@ export default function AddToCartSection({
   };
 
   const handleAddToCart = async () => {
-    if (!selectedVariant || !isAvailable || isBusy) return;
+    if (!selectedVariant?.id || !isAvailable || isBusy) return;
     if (quantity > selectedVariant.stock) return;
 
     try {
@@ -91,18 +91,19 @@ export default function AddToCartSection({
 
             return (
               <div key={item.id} className="group space-x-2">
-                <SpecialButton
-                  destructive={outOfStock}
-                  info={!isSelected && !outOfStock}
-                  disable={outOfStock || isBusy}
-                  onClick={() => {
-                    if (!outOfStock) {
-                      handleSelectVariant(item.id);
-                    }
-                  }}
-                >
-                  {item.size}
-                </SpecialButton>
+
+<SpecialButton
+  destructive={outOfStock}
+  info={!isSelected && !outOfStock}
+  disable={!item.id || outOfStock || isBusy}
+  onClick={() => {
+    if (item.id && !outOfStock && !isBusy) {
+      handleSelectVariant(item.id);
+    }
+  }}
+>
+  {item.size}
+</SpecialButton>
 
                 {outOfStock && (
                   <span className="text-xs text-destructive">
