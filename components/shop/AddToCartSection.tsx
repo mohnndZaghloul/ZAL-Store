@@ -9,94 +9,170 @@ import { useCartStore } from "@/store/cart";
 import { useAddToCart } from "@/hooks/useCart";
 import { useRouter } from "next/navigation";
 
-export default function AddToCartSection({ product }: { product: Product_TP }) {
-  const [variantId, setVariantId] = useState(product?.variants?.[0].id);
+export default function AddToCartSection({
+  product,
+}: {
+  product: Product_TP;
+}) {
+  const variants = product.variants ?? [];
+  const allOutOfStock =
+  variants.length === 0 ||
+  variants.every((variant) => variant.stock <= 0);
+
+  const [variantId, setVariantId] = useState(
+    variants.find((variant) => variant.stock > 0)?.id ?? ""
+  );
   const [quantity, setQuantity] = useState(1);
+
   const addMutation = useAddToCart();
   const router = useRouter();
-  const CartCount = useCartStore((state) => state.count);
+
   const setCartCount = useCartStore((state) => state.setCartCount);
+  const cartCount = useCartStore((state) => state.count);
+
+  const selectedVariant = variants.find(
+    (variant) => variant.id === variantId
+  );
+
+  const isAvailable = (selectedVariant?.stock ?? 0) > 0;
+  const maxQuantity = selectedVariant?.stock ?? 0;
+  const isBusy = addMutation.isPending;
+
+  const handleSelectVariant = (id: string) => {
+    setVariantId(id);
+    setQuantity(1);
+  };
 
   const handleAdding = () => {
-    const variant = product.variants?.find(
-      (variant) => variant.id == variantId,
-    );
-    if (quantity < variant?.stock!) {
-      setQuantity((prev) => ++prev);
-    }
-  };
-  const handleRemove = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => --prev);
-    }
+    if (!isAvailable || quantity >= maxQuantity) return;
+    setQuantity((prev) => prev + 1);
   };
 
-  const handleAddToCart = () => {
-    const variant = product.variants?.find(
-      (variant) => variant.id == variantId,
-    );
-    addMutation.mutate({
-      productId: product.id,
-      variantId: variant?.id!,
-      quantity,
-    });
-    setCartCount(CartCount + quantity);
+  const handleRemove = () => {
+    if (quantity <= 1) return;
+    setQuantity((prev) => prev - 1);
+  };
+
+  const handleAddToCart = async () => {
+    if (!selectedVariant || !isAvailable || isBusy) return;
+    if (quantity > selectedVariant.stock) return;
+
+    try {
+      await addMutation.mutateAsync({
+        productId: product.id,
+        variantId: selectedVariant.id,
+        quantity,
+      });
+
+      setCartCount(cartCount + quantity);
+    } catch (error) {
+      console.error("Could not add product to cart:", error);
+    }
   };
 
   const handleCheckout = () => {
-    router.push(`./checkout?variantId=${variantId}&quantity=${quantity}`);
+    if (!selectedVariant || !isAvailable || isBusy) return;
+    if (quantity > selectedVariant.stock) return;
+
+    router.push(
+      `./checkout?variantId=${selectedVariant.id}&quantity=${quantity}`
+    );
   };
 
   return (
     <section className="py-4 space-y-4">
       <div>
         <p>Size</p>
-        <div className="flex gap-4 pt-2">
-          {product?.variants?.map((item) => {
+
+        <div className="flex flex-wrap gap-4 pt-2">
+          {variants.map((item) => {
             const isSelected = item.id === variantId;
-            if (item.stock === 0) {
-              return (
-                <div className="group space-x-2">
-                  <SpecialButton key={item.id} destructive>
-                    {item.size}
-                  </SpecialButton>
-                  <span className="text-destructive  group-focus-within:opacity-100 opacity-0">
-                    out of stock
-                  </span>
-                </div>
-              );
-            }
+            const outOfStock = item.stock <= 0;
+
             return (
-              <SpecialButton
-                key={item.id}
-                info={!isSelected}
-                onClick={() => setVariantId(item.id)}>
-                {item.size}
-              </SpecialButton>
+              <div key={item.id} className="group space-x-2">
+                <SpecialButton
+                  destructive={outOfStock}
+                  info={!isSelected && !outOfStock}
+                  disable={outOfStock || isBusy}
+                  onClick={() => {
+                    if (!outOfStock) {
+                      handleSelectVariant(item.id);
+                    }
+                  }}
+                >
+                  {item.size}
+                </SpecialButton>
+
+                {outOfStock && (
+                  <span className="text-xs text-destructive">
+                    Out of stock
+                  </span>
+                )}
+              </div>
             );
           })}
         </div>
       </div>
+
+      {!isAvailable && (
+        <p className="text-sm text-destructive">
+          This item is out of stock.
+        </p>
+      )}
+
       <div className="flex justify-between gap-2">
-        <div className="flex items-center gap-4 border p-2">
-          <Button variant="ghost" onClick={handleRemove}>
+        <div className="flex items-center gap-2 border p-2">
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={!isAvailable || quantity <= 1 || isBusy}
+            onClick={handleRemove}
+            aria-label="Decrease quantity"
+          >
             <Minus className="w-8 h-8" />
           </Button>
-          {quantity}
-          <Button variant="ghost" onClick={handleAdding}>
+
+          <span>{quantity}</span>
+
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={
+              !isAvailable || quantity >= maxQuantity || isBusy
+            }
+            onClick={handleAdding}
+            aria-label="Increase quantity"
+          >
             <Plus className="w-8 h-8" />
           </Button>
         </div>
-        <SpecialButton
-          disable={addMutation.isPending}
-          onClick={async () => await handleAddToCart()}
-          className="w-full">
-          {addMutation.isPending ? "adding..." : "add to cart"}
-        </SpecialButton>
+
+
+<SpecialButton
+  destructive={allOutOfStock}
+  disable={!isAvailable || isBusy || allOutOfStock}
+  onClick={handleAddToCart}
+  className="w-full"
+>
+  {allOutOfStock
+    ? "Out of Stock"
+    : isBusy
+      ? "Adding..."
+      : "Add to Cart"}
+</SpecialButton>
       </div>
-      <SpecialButton className="w-full" onClick={handleCheckout}>
-        buy now
-      </SpecialButton>
+
+
+<SpecialButton
+  className="w-full"
+  destructive={allOutOfStock}
+  disable={!isAvailable || isBusy || allOutOfStock}
+  onClick={handleCheckout}
+>
+  {allOutOfStock ? "Out of Stock" : "Buy Now"}
+</SpecialButton>
+
       <div className="text-sm">{product.description}</div>
     </section>
   );

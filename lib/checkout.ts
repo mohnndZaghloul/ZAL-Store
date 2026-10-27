@@ -14,10 +14,14 @@ export async function resolveCheckoutData(
   quantityParam?: string,
 ): Promise<CheckoutData | null> {
   if (variantId) {
-    const requestedQuantity = Math.max(
-      1,
-      parseInt(quantityParam ?? "1", 10) || 1,
-    );
+    const requestedQuantity = Number(quantityParam ?? "1");
+
+    if (
+      !Number.isInteger(requestedQuantity) ||
+      requestedQuantity < 1
+    ) {
+      return null;
+    }
 
     const variant = await prisma.productVariant.findUnique({
       where: { id: variantId },
@@ -25,9 +29,14 @@ export async function resolveCheckoutData(
     });
 
     if (!variant || !variant.product) return null;
-    if (variant.stock < 1) return null;
 
-    const quantity = Math.min(requestedQuantity, variant.stock);
+    if (
+      variant.stock < 1 ||
+      requestedQuantity > variant.stock
+    ) {
+      return null;
+    }
+
     const price =
       getEffectivePrice(
         variant.product.price,
@@ -45,15 +54,14 @@ export async function resolveCheckoutData(
           size: variant.size,
           color: variant.color,
           price,
-          quantity,
+          quantity: requestedQuantity,
           stock: variant.stock,
         },
       ],
-      subtotal: price * quantity,
+      subtotal: price * requestedQuantity,
     };
   }
 
-  // Cart mode — pulls from the same owner-scoped query used by the sidebar
   const cartItems = await getCartProducts();
 
   const items: CheckoutItem_TP[] = cartItems
@@ -67,17 +75,35 @@ export async function resolveCheckoutData(
       size: item.variant!.size,
       color: item.variant!.color,
       price:
-        getEffectivePrice(item.product!.price, item.product!.discountPercent) +
-        item.variant!.priceModifier,
-      quantity: Math.min(item.quantity, item.variant!.stock),
+        getEffectivePrice(
+          item.product!.price,
+          item.product!.discountPercent,
+        ) + item.variant!.priceModifier,
+      quantity: item.quantity,
       stock: item.variant!.stock,
     }));
 
   if (items.length === 0) return null;
 
+  // Reject checkout if any cart item is no longer available
+  // in the quantity requested by the customer.
+  if (
+    items.some(
+      (item) =>
+        !Number.isInteger(item.quantity) ||
+        item.quantity < 1 ||
+        item.stock < item.quantity,
+    )
+  ) {
+    return null;
+  }
+
   return {
     mode: "cart",
     items,
-    subtotal: items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+    subtotal: items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    ),
   };
 }

@@ -19,18 +19,44 @@ async function getCartOwner() {
   };
 }
 
+
 export const addToCart = async (
   productId: string,
   variantId: string,
   quantity: number = 1,
 ) => {
+  if (!Number.isInteger(quantity) || quantity < 1) {
+    throw new Error("Invalid quantity.");
+  }
+
   const owner = await getCartOwner();
 
-  // variantId is the real identity of a cart line (it encodes size/color).
-  // productId is kept alongside as a convenience field for display/queries.
+  const variant = await prisma.productVariant.findFirst({
+    where: {
+      id: variantId,
+      productId,
+    },
+    select: {
+      id: true,
+      stock: true,
+    },
+  });
+
+  if (!variant || variant.stock < 1) {
+    throw new Error("This size is out of stock.");
+  }
+
   const itemIsExist = await prisma.cartItem.findFirst({
     where: { ...owner, variantId },
   });
+
+  const existingQuantity = itemIsExist?.quantity ?? 0;
+
+  if (existingQuantity + quantity > variant.stock) {
+    throw new Error(
+      `Only ${Math.max(0, variant.stock - existingQuantity)} more item(s) are available for this size.`,
+    );
+  }
 
   if (itemIsExist) {
     await prisma.cartItem.update({
@@ -42,6 +68,7 @@ export const addToCart = async (
       data: { ...owner, productId, variantId, quantity },
     });
   }
+
   revalidatePath("/cart");
 };
 
