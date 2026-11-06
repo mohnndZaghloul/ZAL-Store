@@ -6,7 +6,7 @@ import { Product_TP } from "@/types";
 export default async function ProductPage({
   params,
 }: {
-  params: { productID: string };
+  params: Promise<{ productID: string }>;
 }) {
   const { productID } = await params;
   let mode: "add-product" | "update-product";
