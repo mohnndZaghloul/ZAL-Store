@@ -16,13 +16,13 @@ import PageViewTracker from "@/components/analytics/PageViewTracker";
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
-  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 const bodoniModa = Bodoni_Moda({
   subsets: ["latin"],
   variable: "--font-bodoni-moda",
-  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -45,8 +45,7 @@ export default function RootLayout({
         montserrat.variable,
         bodoniModa.variable,
         "font-sans",
-      )}
-    >
+      )}>
       <body>
         <AllProviders>
           <Suspense fallback={null}>
