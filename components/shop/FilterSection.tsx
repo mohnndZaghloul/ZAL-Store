@@ -3,11 +3,28 @@
 import ProductSection from "@/components/shop/ProductSection";
 import ProductsFilter from "@/components/shop/ProductsFilter";
 import useSearchProducts from "@/hooks/useSearchProducts";
-import { useState } from "react";
+import useGetCategories from "@/hooks/useGetCategories";
+import { useEffect, useState } from "react";
 
-const FilterSection = () => {
+type FilterSectionProps = {
+  initialCategory: string;
+};
+
+const FilterSection = ({ initialCategory }: FilterSectionProps) => {
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(initialCategory);
+
+  const { data: categories } = useGetCategories();
+
+  useEffect(() => {
+    if (!initialCategory || !categories) return;
+
+    const selectedCategory = categories.find(
+      (cat) => cat.name.toLowerCase() === initialCategory.toLowerCase()
+    );
+
+    setCategory(selectedCategory?.id ?? "");
+  }, [initialCategory, categories]);
 
   const filterData = useSearchProducts(query, category);
 

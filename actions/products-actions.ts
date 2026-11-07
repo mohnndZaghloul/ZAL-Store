@@ -187,6 +187,12 @@ export const AddProduct = async (
       inputs: rawData,
     };
   }
+  revalidatePath("/collections");
+
+  if (meta.mode === "update-product" && meta.productId) {
+    revalidatePath(`/${meta.productId}`);
+  }
+
   redirect("/dashboard/products");
 };
 

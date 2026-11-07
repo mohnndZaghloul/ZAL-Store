@@ -1,5 +1,7 @@
 import JoinCircleSection from "@/components/layout/footer/JoinCircleSection";
 import NavLink from "../header/NavLink";
+import SizeGuideDialog from "./SizeGuideDialog";
+import PolicyDialog from "./PolicyDialog";
 
 const Footer = () => {
   return (
@@ -19,9 +21,12 @@ const Footer = () => {
               shop
             </p>
             <ul className="space-y-2 md:space-y-5 capitalize text-xs">
-              <li>new arrivals</li>
-              <li>collections</li>
-              <li>basics</li>
+            <NavLink className="w-fit" href="/collections?category=pullover">
+  new arrivals
+</NavLink>
+<NavLink className="w-fit" href="/collections">
+  collections
+</NavLink>
             </ul>
           </div>
           <div className="space-y-2 md:space-y-5">
@@ -29,10 +34,20 @@ const Footer = () => {
               support
             </p>
             <ul className="space-y-2 md:space-y-5 capitalize text-xs">
-              <li>shipping</li>
-              <li>returns</li>
-              <li>size guide</li>
-              <li>contact us</li>
+            <li>
+  <PolicyDialog />
+</li>
+              <li>
+  <SizeGuideDialog />
+</li>
+<li>
+  <NavLink
+    className="w-fit"
+    href="https://wa.me/201092766581?text=Hello%20ZAL!%20%F0%9F%91%8B%20I'm%20interested%20in%20your%20products%20and%20would%20like%20to%20ask%20about%20something.%20Could%20you%20please%20help%20me%3F"
+  >
+    contact us
+  </NavLink>
+</li>
             </ul>
           </div>
           <div className="space-y-2 md:space-y-5">
@@ -55,10 +70,20 @@ const Footer = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink className="w-fit" href="mailto:zaaaal.eg@gmail.com">
-                  our E-mail
+                <NavLink
+                  className="w-fit"
+                  href="https://www.tiktok.com/@zal.eg">
+                  TikTok
                 </NavLink>
               </li>
+              <li>
+  <NavLink
+    className="w-fit"
+    href="mailto:zaaaal.eg@gmail.com?subject=Hello%20ZAL&body=Hello%20ZAL%20Team%2C"
+  >
+    our E-mail
+  </NavLink>
+</li>
             </ul>
           </div>
         </div>

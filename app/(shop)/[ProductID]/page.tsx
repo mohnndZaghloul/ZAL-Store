@@ -6,6 +6,7 @@ import CustomCarousel from "@/components/shop/CustomCarousel";
 import SimilarProducts from "@/components/shop/SimilarProducts";
 import AddToCartSection from "@/components/shop/AddToCartSection";
 import { getEffectivePrice, isOnSale } from "@/lib/pricing";
+export const dynamic = "force-dynamic";
 
 type Props_TP = {
   params: Promise<{
