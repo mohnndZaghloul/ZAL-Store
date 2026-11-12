@@ -9,48 +9,61 @@ const categories = [
   "Shirts",
   "T-Shirts",
   "Pants",
-  "Sweaters",
-  "Hoodies",
+  "Pullover",
 ];
 
 const shirtSizes = [
-  { size: "S", chest: 54, waist: 50, length: 76, sleeve: 66, collar: 38 },
-  { size: "M", chest: 57, waist: 53, length: 77, sleeve: 67, collar: 40 },
-  { size: "L", chest: 60, waist: 56, length: 78, sleeve: 68, collar: 42 },
-  { size: "XL", chest: 63, waist: 59, length: 79, sleeve: 69, collar: 44 },
-  { size: "2XL", chest: 66, waist: 62, length: 80, sleeve: 70, collar: 46 },
-  { size: "3XL", chest: 69, waist: 65, length: 81, sleeve: 71, collar: 48 },
-  { size: "4XL", chest: 72, waist: 71, length: 82, sleeve: 72, collar: 50 },
-  { size: "5XL", chest: 75, waist: 74, length: 83, sleeve: 73, collar: 52 },
-  { size: "6XL", chest: 77, waist: 76, length: 84, sleeve: 74, collar: 54 },
-  { size: "7XL", chest: 79, waist: 78, length: 84, sleeve: 75, collar: 56 },
+  { size: "XS", chest: 92, bicep: 42, length: 73, sleeve: 61, collar: 37 },
+  { size: "S", chest: 94, bicep: 43, length: 74, sleeve: 62, collar: 38 },
+  { size: "M", chest: 98, bicep: 44, length: 75, sleeve: 63, collar: 39 },
+  { size: "L", chest: 102, bicep: 45, length: 76, sleeve: 64, collar: 41 },
+  { size: "XL", chest: 106, bicep: 46, length: 77, sleeve: 65, collar: 43 },
+  { size: "2XL", chest: 110, bicep: 47, length: 78, sleeve: 66, collar: 45 },
+  { size: "3XL", chest: 114, bicep: 48, length: 79, sleeve: 67, collar: 47 },
+  { size: "4XL", chest: 118, bicep: 49, length: 80, sleeve: 68, collar: 49 },
+  { size: "5XL", chest: 122, bicep: 50, length: 81, sleeve: 69, collar: 51 },
+  { size: "6XL", chest: 126, bicep: 51, length: 82, sleeve: 70, collar: 53 },
 ];
 
 const tShirtSizes = [
-    { size: "S", chest: 48, waist: 46, length: 68, sleeve: 20 },
-    { size: "M", chest: 51, waist: 49, length: 70, sleeve: 21 },
-    { size: "L", chest: 54, waist: 52, length: 72, sleeve: 22 },
-    { size: "XL", chest: 57, waist: 55, length: 74, sleeve: 23 },
-    { size: "2XL", chest: 60, waist: 58, length: 76, sleeve: 24 },
-    { size: "3XL", chest: 63, waist: 61, length: 78, sleeve: 25 },
-    { size: "4XL", chest: 66, waist: 64, length: 80, sleeve: 26 },
-    { size: "5XL", chest: 69, waist: 67, length: 82, sleeve: 27 },
-    { size: "6XL", chest: 72, waist: 70, length: 84, sleeve: 28 },
-    { size: "7XL", chest: 75, waist: 73, length: 86, sleeve: 29 },
+    { size: "XS", chest: 49, bicep: 18, length: 70, sleeve: 22.5 },
+    { size: "S", chest: 52, bicep: 19, length: 71.5, sleeve: 23 },
+    { size: "M", chest: 55, bicep: 20, length: 73, sleeve: 23.5 },
+    { size: "L", chest: 58, bicep: 21, length: 75, sleeve: 24 },
+    { size: "XL", chest: 61.5, bicep: 22, length: 77, sleeve: 24.5 },
+    { size: "2XL", chest: 65, bicep: 23, length: 79, sleeve: 25 },
+    { size: "3XL", chest: 68.5, bicep: 24, length: 81, sleeve: 25.5 },
+    { size: "4XL", chest: 72, bicep: 25, length: 83, sleeve: 26 },
+    { size: "5XL", chest: 75.5, bicep: 26, length: 85, sleeve: 26.5 },
+    { size: "6XL", chest: 79, bicep: 27, length: 87, sleeve: 27 },
   ];
 
   const pantsSizes = [
-    { size: "S", waist: 72, hip: 94, length: 100, thigh: 54 },
-    { size: "M", waist: 76, hip: 98, length: 102, thigh: 56 },
-    { size: "L", waist: 80, hip: 102, length: 104, thigh: 58 },
-    { size: "XL", waist: 84, hip: 106, length: 106, thigh: 60 },
-    { size: "2XL", waist: 88, hip: 110, length: 108, thigh: 62 },
-    { size: "3XL", waist: 92, hip: 114, length: 110, thigh: 64 },
-    { size: "4XL", waist: 96, hip: 118, length: 112, thigh: 66 },
-    { size: "5XL", waist: 100, hip: 122, length: 114, thigh: 68 },
-    { size: "6XL", waist: 104, hip: 126, length: 116, thigh: 70 },
-    { size: "7XL", waist: 108, hip: 130, length: 118, thigh: 72 },
+    { size: "XS", waist: 80, hip: 93, length: 104, thigh: 61 },
+    { size: "S", waist: 84, hip: 97, length: 105, thigh: 64 },
+    { size: "M", waist: 88, hip: 101, length: 106, thigh: 66 },
+    { size: "L", waist: 92, hip: 105, length: 107, thigh: 69 },
+    { size: "XL", waist: 96, hip: 109, length: 108, thigh: 72 },
+    { size: "2XL", waist: 100, hip: 113, length: 109, thigh: 74 },
+    { size: "3XL", waist: 104, hip: 117, length: 110, thigh: 77 },
+    { size: "4XL", waist: 108, hip: 121, length: 111, thigh: 79 },
+    { size: "5XL", waist: 112, hip: 124, length: 112, thigh: 82 },
+    { size: "6XL", waist: 116, hip: 128, length: 113, thigh: 85 },
   ];
+
+  const PulloverSizes = [
+    { size: "XS", chest: 50, bicep: 16.5, length: 65, sleeve: 61 },
+    { size: "S", chest: 52, bicep: 17.5, length: 66 , sleeve: 63 },
+    { size: "M", chest: 54, bicep: 18.5, length: 68, sleeve: 63 },
+    { size: "L", chest: 56, bicep: 19.5, length: 70, sleeve: 64 },
+    { size: "XL", chest: 60, bicep: 20.5, length: 72, sleeve: 65 },
+    { size: "2XL", chest: 63.5, bicep: 21.5, length: 74, sleeve: 66 },
+    { size: "3XL", chest: 66.5, bicep: 22.5, length: 74, sleeve: 67 },
+    { size: "4XL", chest: 70, bicep: 23.5, length: 76, sleeve: 68 },
+    { size: "5XL", chest: 73.5, bicep: 24.5, length: 76, sleeve: 69 },
+    { size: "6XL", chest: 76, bicep: 25.5, length: 78, sleeve: 70 },
+  ];
+
 
 
 const SizeGuideDialog = () => {
@@ -148,7 +161,7 @@ const SizeGuideDialog = () => {
         sizes: shirtSizes,
         measurements: [
           { label: "Chest", key: "chest" },
-          { label: "Waist", key: "waist" },
+          { label: "bicep", key: "bicep" },
           { label: "Length", key: "length" },
           { label: "Sleeve", key: "sleeve" },
           { label: "Collar", key: "collar" },
@@ -159,7 +172,7 @@ const SizeGuideDialog = () => {
         sizes: tShirtSizes,
         measurements: [
           { label: "Chest", key: "chest" },
-          { label: "Waist", key: "waist" },
+          { label: "bicep", key: "bicep" },
           { label: "Length", key: "length" },
           { label: "Sleeve", key: "sleeve" },
         ],
@@ -172,6 +185,16 @@ const SizeGuideDialog = () => {
           { label: "Hip", key: "hip" },
           { label: "Length", key: "length" },
           { label: "Thigh", key: "thigh" },
+        ],
+      },
+      Pullover: {
+        image: "/images/pullover-size-guide.png",
+        sizes: PulloverSizes,
+        measurements: [
+          { label: "Chest", key: "chest" },
+          { label: "bicep", key: "bicep" },
+          { label: "Length", key: "length" },
+          { label: "Sleeve", key: "sleeve" },
         ],
       },
     };
