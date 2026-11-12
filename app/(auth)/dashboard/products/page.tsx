@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 import { getAllStock } from "@/actions/products-actions";
+import ExportButton from "@/components/dashboard/ExportButton";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,7 @@ export default async function ProductsPage() {
           <Shirt />
           products
         </h1>
+        <ExportButton url="/api/admin/products/export" filePrefix="products" />
         <Button
           className="capitalize shadow rounded-none hover:shadow-primary border-0"
           nativeButton={false}

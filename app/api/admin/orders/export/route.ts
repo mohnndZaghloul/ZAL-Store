@@ -3,25 +3,15 @@ import ExcelJS from "exceljs";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma"; // adjust to your path
 import { auth } from "@/lib/auth"; // adjust: your better-auth instance
+import { requireAdmin } from "@/actions/customers-actions";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   // Admin check (your User model has role: USER | ADMIN)
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const dbUser = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { role: true },
-  });
-
-  if (dbUser?.role !== "ADMIN") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  const denied = await requireAdmin();
+  if (denied) return denied;
 
   const orders = await prisma.order.findMany({
     orderBy: { createdAt: "desc" },

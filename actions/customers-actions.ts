@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/auth";
 import { forbidden, unauthorized } from "next/navigation";
 import { Role_TP } from "@/types/index";
+import { NextResponse } from "next/server";
 const SUPER_ADMIN_EMAIL = "zaaaal.eg@gmail.com";
 
 const isSuperAdmin = async () => {
@@ -16,12 +17,26 @@ const isSuperAdmin = async () => {
     return false;
   }
 
-  return (
-    session.user.email.toLowerCase() ===
-    SUPER_ADMIN_EMAIL.toLowerCase()
-  );
+  return session.user.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase();
 };
 
+// Returns a NextResponse if the request is NOT from an admin, otherwise null.
+export async function requireAdmin() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const dbUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true },
+  });
+
+  if (dbUser?.role !== "ADMIN") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+  return null;
+}
 
 export const getRole = async () => {
   const session = await getSession();
@@ -52,10 +67,7 @@ export const setRole = async (id: string, role: Role_TP) => {
     throw new Error("User not found.");
   }
 
-  if (
-    targetUser.email.toLowerCase() ===
-    SUPER_ADMIN_EMAIL.toLowerCase()
-  ) {
+  if (targetUser.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
     forbidden();
   }
 
@@ -73,7 +85,6 @@ export const getCurrentUser = async () => {
   if (!session?.user?.id) return null;
   return await prisma.user.findUnique({ where: { id: session?.user.id } });
 };
-
 
 export const getAllUsers = async () => {
   if (!(await isSuperAdmin())) {
@@ -99,10 +110,7 @@ export const deleteCustomer = async (id: string) => {
     throw new Error("User not found.");
   }
 
-  if (
-    targetUser.email.toLowerCase() ===
-    SUPER_ADMIN_EMAIL.toLowerCase()
-  ) {
+  if (targetUser.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
     forbidden();
   }
 
@@ -132,10 +140,7 @@ export const updateCustomer = async (
     throw new Error("User not found.");
   }
 
-  if (
-    targetUser.email.toLowerCase() ===
-    SUPER_ADMIN_EMAIL.toLowerCase()
-  ) {
+  if (targetUser.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
     forbidden();
   }
 
