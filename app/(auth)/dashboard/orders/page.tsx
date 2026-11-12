@@ -1,4 +1,5 @@
 import { getAllOrders } from "@/actions/orders-action";
+import ExportOrdersButton from "@/components/dashboard/orders/ExportOrdersButton";
 import OrdersSection from "@/components/dashboard/orders/OrdersSection";
 import { Box } from "lucide-react";
 import { Metadata } from "next";
@@ -19,6 +20,7 @@ export default async function OrdersDashboard() {
           <Box />
           orders
         </h1>
+        <ExportOrdersButton />
       </div>
       {data.length !== 0 ? (
         <OrdersSection orders={data} />
