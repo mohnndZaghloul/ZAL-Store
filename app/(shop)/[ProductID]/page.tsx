@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import { Metadata } from "next";
 import { getAllProducts, getProductById } from "@/actions/products-actions";
 import { notFound } from "next/navigation";
@@ -6,6 +6,8 @@ import CustomCarousel from "@/components/shop/CustomCarousel";
 import SimilarProducts from "@/components/shop/SimilarProducts";
 import AddToCartSection from "@/components/shop/AddToCartSection";
 import { getEffectivePrice, isOnSale } from "@/lib/pricing";
+import Image from "next/image";
+
 export const dynamic = "force-dynamic";
 
 type Props_TP = {
@@ -19,6 +21,7 @@ export async function generateMetadata({
 }: Props_TP): Promise<Metadata> {
   const { ProductID } = await params;
   const product = await getProductById(ProductID);
+
   if (!product) {
     return { title: "not founded product" };
   }
@@ -46,33 +49,44 @@ export default async function ProductDetailsPage({ params }: Props_TP) {
 
   if (!product) notFound();
 
+  const categoryName = product.categories?.[0]?.name ?? "";
+const categoryId = product.categories?.[0]?.id;
   return (
-    <main className="container my-8 space-y-4 md:space-y-8">
-      <section className="flex flex-col md:flex-row gap-8">
-        <div className="flex-2 md:hidden">
+    <main className="container my-8 space-y-8">
+<section className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr] gap-6 lg:gap-8 items-start">
+
+        {/* Mobile Gallery */}
+        <div className="md:hidden">
           <CustomCarousel images={product.images} />
         </div>
-        <div className="hidden md:block flex-2">
-          <div className="flex gap-2 w-full h-full">
-            {product?.images.map((image) => (
-              <div key={image} className="relative h-full w-full aspect-4/6">
-                <Image
-                  src={image}
-                  alt={product?.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="flex-1 divide-primary divide-y">
+
+       {/* Desktop Gallery: two images side by side */}
+<div className="hidden md:grid grid-cols-2 gap-3">
+  {product.images.map((image, index) => (
+    <div
+      key={`${image}-${index}`}
+      className="relative w-full aspect-[3/4] overflow-hidden bg-gray-50"
+    >
+      <Image
+        src={image}
+        alt={`${product.title} - image ${index + 1}`}
+        fill
+        sizes="(max-width: 1024px) 25vw, 25vw"
+        className="object-cover"
+      />
+    </div>
+  ))}
+</div>
+        {/* Product Information */}
+        <div className="min-w-0 md:sticky md:top-24 divide-primary divide-y">
           <div className="py-4">
             <h3 className="uppercase font-light text-sm text-primary">
               Zal Store for you
             </h3>
-            <h2 className="text-2xl uppercase">{product?.title}</h2>
-            <div className="flex items-center gap-3 mt-3">
+
+            <h2 className="text-2xl uppercase">{product.title}</h2>
+
+            <div className="flex items-center gap-3 mt-3 flex-wrap">
               {isOnSale(product.discountPercent) ? (
                 <>
                   <span className="text-sm text-neutral line-through">
@@ -98,14 +112,21 @@ export default async function ProductDetailsPage({ params }: Props_TP) {
               )}
             </div>
           </div>
-          <AddToCartSection product={product} />
+
+          <AddToCartSection
+            product={product}
+            categoryName={categoryName}
+          />
+
           <div className="py-4 space-y-4">
             <div className="flex items-center justify-between">
               <p>Color</p>
-              <div
-                style={{ background: product.variants[0].color }}
-                className="rounded-full w-8 aspect-square"
-              />
+              {product.variants?.[0]?.color && (
+                <div
+                  style={{ background: product.variants[0].color }}
+                  className="rounded-full w-8 aspect-square"
+                />
+              )}
             </div>
             {/* <div className="flex items-center justify-between pe-2">
               <p>In Stock</p>
@@ -120,7 +141,13 @@ export default async function ProductDetailsPage({ params }: Props_TP) {
           </div>
         </div>
       </section>
-      <SimilarProducts id={product.id} categoryId={product?.categories[0].id} />
+
+      {categoryId && (
+  <SimilarProducts
+    id={product.id}
+    categoryId={categoryId}
+  />
+)}
     </main>
   );
 }

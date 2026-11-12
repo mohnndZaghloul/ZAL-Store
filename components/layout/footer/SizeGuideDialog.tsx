@@ -52,32 +52,55 @@ const tShirtSizes = [
   ];
 
   const PulloverSizes = [
-    { size: "XS", chest: 50, bicep: 16.5, length: 65, sleeve: 61 },
-    { size: "S", chest: 52, bicep: 17.5, length: 66 , sleeve: 63 },
-    { size: "M", chest: 54, bicep: 18.5, length: 68, sleeve: 63 },
-    { size: "L", chest: 56, bicep: 19.5, length: 70, sleeve: 64 },
-    { size: "XL", chest: 60, bicep: 20.5, length: 72, sleeve: 65 },
-    { size: "2XL", chest: 63.5, bicep: 21.5, length: 74, sleeve: 66 },
-    { size: "3XL", chest: 66.5, bicep: 22.5, length: 74, sleeve: 67 },
-    { size: "4XL", chest: 70, bicep: 23.5, length: 76, sleeve: 68 },
-    { size: "5XL", chest: 73.5, bicep: 24.5, length: 76, sleeve: 69 },
-    { size: "6XL", chest: 76, bicep: 25.5, length: 78, sleeve: 70 },
+    { size: "XS", chest: 46, bicep: 16.5, length: 65, sleeve: 61 },
+    { size: "S", chest: 48, bicep: 17.5, length: 66 , sleeve: 63 },
+    { size: "M", chest: 50, bicep: 18.5, length: 68, sleeve: 63 },
+    { size: "L", chest: 53, bicep: 19.5, length: 70, sleeve: 64 },
+    { size: "XL", chest: 56, bicep: 20.5, length: 72, sleeve: 65 },
+    { size: "2XL", chest: 59, bicep: 21.5, length: 74, sleeve: 66 },
+    { size: "3XL", chest: 62, bicep: 22.5, length: 74, sleeve: 67 },
+    { size: "4XL", chest: 65, bicep: 23.5, length: 76, sleeve: 68 },
+    { size: "5XL", chest: 68, bicep: 24.5, length: 76, sleeve: 69 },
+    { size: "6XL", chest: 71, bicep: 25.5, length: 78, sleeve: 70 },
   ];
 
 
+  type SizeGuideDialogProps = {
+    initialCategory?: string;
+  };
 
-const SizeGuideDialog = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("Shirts");
+  const SizeGuideDialog = ({
+    initialCategory = "Shirts",
+  }: SizeGuideDialogProps) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const normalizeCategory = (name: string) => {
+      const value = name.trim().toLowerCase();
+
+      if (value.includes("pullover")) return "Pullover";
+      if (value.includes("shirt") && !value.includes("t-shirt")) return "Shirts";
+      if (value.includes("t-shirt") || value.includes("tshirt")) return "T-Shirts";
+      if (value.includes("pant") || value.includes("trouser")) return "Pants";
+
+      return "Shirts";
+    };
+
+    const [activeCategory, setActiveCategory] = useState(
+      normalizeCategory(initialCategory),
+    );
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="hover:text-primary transition-colors"
-      >
-      SIZE GUIDE
-      </button>
+     <button
+  type="button"
+  onClick={() => {
+    setActiveCategory(normalizeCategory(initialCategory));
+    setIsOpen(true);
+  }}
+  className="text-xs underline underline-offset-4 hover:text-primary transition-colors"
+>
+  SIZE GUIDE
+</button>
 
       {isOpen && (
         <div

@@ -1,3 +1,4 @@
+
 "use client";
 
 import SpecialButton from "@/components/SpecialButton";
@@ -8,15 +9,26 @@ import { useState } from "react";
 import { useCartStore } from "@/store/cart";
 import { useAddToCart } from "@/hooks/useCart";
 import { useRouter } from "next/navigation";
+import SizeGuideDialog from "@/components/layout/footer/SizeGuideDialog";
 
-export default function AddToCartSection({ product }: { product: Product_TP }) {
+type AddToCartSectionProps = {
+  product: Product_TP;
+  categoryName?: string;
+};
+
+export default function AddToCartSection({
+  product,
+  categoryName = "",
+}: AddToCartSectionProps) {
   const variants = product.variants ?? [];
+
   const allOutOfStock =
     variants.length === 0 || variants.every((variant) => variant.stock <= 0);
 
   const [variantId, setVariantId] = useState(
     variants.find((variant) => variant.stock > 0)?.id ?? "",
   );
+
   const [quantity, setQuantity] = useState(1);
 
   const addMutation = useAddToCart();
@@ -37,12 +49,12 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
   };
 
   const handleAdding = () => {
-    if (!isAvailable || quantity >= maxQuantity) return;
+    if (quantity >= maxQuantity || !isAvailable || isBusy) return;
     setQuantity((prev) => prev + 1);
   };
 
   const handleRemove = () => {
-    if (quantity <= 1) return;
+    if (quantity <= 1 || isBusy) return;
     setQuantity((prev) => prev - 1);
   };
 
@@ -74,10 +86,15 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
 
   return (
     <section className="py-4 space-y-4">
+      {/* Size and Size Guide */}
       <div>
-        <p>Size</p>
+        <div className="flex items-center justify-between gap-3">
+          <p>Size</p>
 
-        <div className="flex flex-wrap gap-4 pt-2">
+          <SizeGuideDialog initialCategory={categoryName} />
+        </div>
+
+        <div className="flex flex-wrap gap-4 pt-3">
           {variants.map((item) => {
             const isSelected = item.id === variantId;
             const outOfStock = item.stock <= 0;
@@ -92,12 +109,15 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
                     if (item.id && !outOfStock && !isBusy) {
                       handleSelectVariant(item.id);
                     }
-                  }}>
+                  }}
+                >
                   {item.size}
                 </SpecialButton>
 
                 {outOfStock && (
-                  <span className="text-xs text-destructive">Out of stock</span>
+                  <span className="text-xs text-destructive">
+                    Out of stock
+                  </span>
                 )}
               </div>
             );
@@ -106,9 +126,12 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
       </div>
 
       {!isAvailable && (
-        <p className="text-sm text-destructive">This item is out of stock.</p>
+        <p className="text-sm text-destructive">
+          This item is out of stock.
+        </p>
       )}
 
+      {/* Quantity and Add to Cart */}
       <div className="flex justify-between gap-2">
         <div className="flex items-center gap-2 border p-2">
           <Button
@@ -116,7 +139,8 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
             variant="ghost"
             disabled={!isAvailable || quantity <= 1 || isBusy}
             onClick={handleRemove}
-            aria-label="Decrease quantity">
+            aria-label="Decrease quantity"
+          >
             <Minus className="w-8 h-8" />
           </Button>
 
@@ -127,7 +151,8 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
             variant="ghost"
             disabled={!isAvailable || quantity >= maxQuantity || isBusy}
             onClick={handleAdding}
-            aria-label="Increase quantity">
+            aria-label="Increase quantity"
+          >
             <Plus className="w-8 h-8" />
           </Button>
         </div>
@@ -136,7 +161,8 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
           destructive={allOutOfStock}
           disable={!isAvailable || isBusy || allOutOfStock}
           onClick={handleAddToCart}
-          className="w-full">
+          className="w-full"
+        >
           {allOutOfStock
             ? "Out of Stock"
             : isBusy
@@ -145,11 +171,13 @@ export default function AddToCartSection({ product }: { product: Product_TP }) {
         </SpecialButton>
       </div>
 
+      {/* Buy Now */}
       <SpecialButton
         className="w-full"
         destructive={allOutOfStock}
         disable={!isAvailable || isBusy || allOutOfStock}
-        onClick={handleCheckout}>
+        onClick={handleCheckout}
+      >
         {allOutOfStock ? "Out of Stock" : "Buy Now"}
       </SpecialButton>
 
